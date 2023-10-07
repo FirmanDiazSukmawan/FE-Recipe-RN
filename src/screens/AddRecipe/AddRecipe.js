@@ -104,7 +104,6 @@ export default function AddRecipe() {
           style={{
             width: '75%',
             height: 150,
-            objectFit: 'contain',
             borderWidth: 1,
             borderColor: 'brown',
           }}
@@ -165,12 +164,11 @@ export default function AddRecipe() {
               style={{
                 width: '100%',
                 height: 150,
-                objectFit: 'stretch',
                 borderWidth: 1,
                 borderColor: 'brown',
               }}
               controls={true}
-              resizeMode="stretch"
+              resizeMode="strech"
               autoPlay={false}
             />
             <View style={{flexDirection: 'row', marginVertical: 10}}>

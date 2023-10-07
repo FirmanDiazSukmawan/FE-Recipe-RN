@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Input,
   Icon,
@@ -12,15 +12,41 @@ import {
   Button,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
+import {API_RECIPE} from '@env';
 
 export default function Register() {
   const [show, setShow] = React.useState(false);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone_number, setphone_number] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setconfirmPassword] = useState('');
   const navigation = useNavigation();
+
+  const register = async () => {
+    try {
+      const res = await axios.post(`${API_RECIPE}/users`, {
+        username: username,
+        email: email,
+        phone_number: phone_number,
+        password: password,
+        confirmPassword: confirmPassword,
+      });
+      Alert.alert('register success');
+      navigation.navigate('Login');
+      console.log(res);
+    } catch (err) {
+      Alert.alert('register failed');
+      console.log(err);
+    }
+  };
+
   const Login = () => {
     navigation.navigate('Login');
   };
   const back = () => {
-    navigation.navigate('Home');
+    navigation.navigate('HomePage');
   };
   return (
     <NativeBaseProvider>
@@ -44,6 +70,8 @@ export default function Register() {
                 <Icon as={<FeatherIcon name="user" />} size={5} ml="2" />
               }
               placeholder="Name"
+              value={username}
+              onChangeText={setUsername}
             />
             <Input
               w={{
@@ -57,6 +85,8 @@ export default function Register() {
                 <Icon as={<FeatherIcon name="mail" />} size={5} ml="2" />
               }
               placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
             />
             <Input
               w={{
@@ -70,6 +100,8 @@ export default function Register() {
                 <Icon as={<FeatherIcon name="phone" />} size={5} ml="2" />
               }
               placeholder="PhoneNumber"
+              value={phone_number}
+              onChangeText={setphone_number}
             />
             <Input
               w={{
@@ -86,6 +118,8 @@ export default function Register() {
                 </Pressable>
               }
               placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
             />
             <Input
               w={{
@@ -95,13 +129,15 @@ export default function Register() {
               h="60"
               bgColor="#ffff"
               borderRadius="10"
-              type={show ? 'text' : 'ConfirmPassword'}
+              type={show ? 'text' : 'password'}
               InputLeftElement={
                 <Pressable onPress={() => setShow(!show)}>
                   <Icon as={<FeatherIcon name="lock" />} size={5} ml="2" />
                 </Pressable>
               }
-              placeholder="ConfirmPassword"
+              placeholder="confirm pasword"
+              value={confirmPassword}
+              onChangeText={setconfirmPassword}
             />
             <Button
               w={{
@@ -110,8 +146,9 @@ export default function Register() {
               }}
               h="50"
               borderRadius="10"
-              bgColor="#EFC81A">
-              <Text style={styles.create}>Create</Text>
+              bgColor="#EFC81A"
+              onPress={register}>
+              <Text style={styles.create}>Create account</Text>
             </Button>
             <Text style={styles.already}>
               Already have account?{' '}

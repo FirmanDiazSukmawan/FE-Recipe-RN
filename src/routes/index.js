@@ -25,107 +25,100 @@ const Stack = createNativeStackNavigator();
 
 function Auth() {
   return (
-    <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Register"
-        component={Register}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="DetailPopular"
-        component={DetailPopularMenu}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="DetailRecipe"
-        component={DetailRecipe}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="DetailVideo"
-        component={DetailVideo}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="MyRecipe"
-        component={MyRecipe}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="SavedRecipe"
-        component={SavedRecipe}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="LikedRecipe"
-        component={LikedRecipe}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="EditProfile"
-        component={EditProfile}
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="HomePage"
+          component={Router}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DetailPopular"
+          component={DetailPopularMenu}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DetailRecipe"
+          component={DetailRecipe}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DetailVideo"
+          component={DetailVideo}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="MyRecipe"
+          component={MyRecipe}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SavedRecipe"
+          component={SavedRecipe}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="LikedRecipe"
+          component={LikedRecipe}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 function Router() {
-  const tabHiddenRoutes = ['Auth'];
-
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen
-          name="Auth"
-          component={Auth}
-          options={({route}) => ({
-            tabBarStyle: tabHiddenRoutes?.includes(route.name)
-              ? {display: 'none'}
-              : {display: 'flex'},
-            headerShown: false,
-          })}
-        />
-        <Tab.Screen
-          name="Home"
-          component={Home}
-          options={{
-            title: 'Home',
-            tabBarIcon: ({color, size}) => (
-              <Feather name="home" color={color} size={size} />
-            ),
-            headerShown: false,
-          }}
-        />
-        <Tab.Screen
-          name="AddRecipe"
-          component={AddRecipe}
-          options={{
-            title: 'Home',
-            tabBarIcon: ({color, size}) => (
-              <Ionicons name="add-circle-outline" color={color} size={size} />
-            ),
-            headerShown: false,
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={Profile}
-          options={{
-            title: 'Profile',
-            tabBarIcon: ({color, size}) => (
-              <FontAwesome name="user-circle-o" color={color} size={size} />
-            ),
-            headerShown: false,
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          title: 'Home',
+          tabBarIcon: ({color, size}) => (
+            <Feather name="home" color={color} size={size} />
+          ),
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="AddRecipe"
+        component={AddRecipe}
+        options={{
+          title: 'Add Recipe',
+          tabBarIcon: ({color, size}) => (
+            <Ionicons name="add-circle-outline" color={color} size={size} />
+          ),
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({color, size}) => (
+            <FontAwesome name="user-circle-o" color={color} size={size} />
+          ),
+          headerShown: false,
+        }}
+      />
+    </Tab.Navigator>
   );
 }
-export default Router;
+export default Auth;

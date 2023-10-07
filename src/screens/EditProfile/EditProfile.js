@@ -1,21 +1,87 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Feather from 'react-native-vector-icons/Feather';
 import {Icon, Input, NativeBaseProvider, Stack, Button} from 'native-base';
+import {useDispatch, useSelector} from 'react-redux';
+import {getUsersIdSelector} from '../../redux/reducer/users/getUserbyIdSlice';
+import {updateUsers} from '../../redux/reducer/users/updateUser';
 
 export default function EditProfile() {
   const navigation = useNavigation();
+  const route = useRoute();
   const [selectedImage, setSelectedImage] = useState(null);
-  const [show, setShow] = React.useState(false);
+  const {users_id} = route.params;
+  const dispatch = useDispatch();
+  const user = useSelector(getUsersIdSelector);
+  // console.log(user);
+  // console.log(users_id);
   const back = () => {
     navigation.navigate('Profile');
+  };
+
+  const [data, setData] = useState({
+    username: '',
+    phone_number: '',
+    image: {
+      name: selectedImage?.fileName,
+      type: selectedImage?.type,
+      uri: selectedImage?.uri,
+    },
+  });
+
+  // console.log(data);
+
+  useEffect(() => {
+    setData({
+      username: user?.data?.username,
+      phone_number: user?.data?.phone_number,
+      image: {
+        name: selectedImage?.fileName,
+        type: selectedImage?.type,
+        uri: selectedImage?.uri,
+      },
+    });
+  }, []);
+
+  // console.log(selectedImage);
+
+  const handleUsername = text => {
+    setData({
+      ...data,
+      username: text,
+    });
+  };
+  const handlePhoneNumber = text => {
+    setData({
+      ...data,
+      phone_number: text,
+    });
+  };
+
+  const handleSubmit = () => {
+    dispatch(updateUsers({users_id, data, selectedImage}))
+      .then(res => {
+        Alert.alert('Edit profile successfully');
+        console.log(res);
+      })
+      .catch(error => {
+        Alert.alert('Edit profile failed');
+        console.log(error);
+      });
   };
 
   const options = {
@@ -29,9 +95,9 @@ export default function EditProfile() {
     try {
       const result = await launchCamera(options);
       if (!result.didCancel) {
-        const uri = result.assets[0].uri;
+        const uri = result.assets[0];
         setSelectedImage(uri);
-        console.log('Gambar dari kamera:', uri);
+        // console.log('Gambar dari kamera:', uri);
       } else {
         console.log('menolak open kamera');
       }
@@ -43,15 +109,17 @@ export default function EditProfile() {
   const handleOpenImageLibrary = async () => {
     try {
       const result = await launchImageLibrary(options);
+      // console.log(result.assets[0].uri);
       if (!result.didCancel) {
-        const uri = result.assets[0].uri;
+        const uri = result.assets[0];
         setSelectedImage(uri);
-        console.log('Image dari galeri:', result.uri);
+        // console.log('Image dari galeri:', result);
       }
     } catch (error) {
       console.error('Error saat membuka galeri:', error);
     }
   };
+  // console.log(selectedImage);
 
   return (
     <View style={styles.container}>
@@ -61,7 +129,7 @@ export default function EditProfile() {
       </View>
       <View style={styles.section}>
         <Image
-          source={{uri: selectedImage}}
+          source={{uri: selectedImage?.uri}}
           style={{
             width: 200,
             height: 200,
@@ -96,6 +164,8 @@ export default function EditProfile() {
                 <Icon as={<Feather name="user" />} size={5} ml="2" />
               }
               placeholder="Name"
+              value={data.username}
+              onChangeText={handleUsername}
             />
             <Input
               w={{
@@ -109,9 +179,13 @@ export default function EditProfile() {
                 <Icon as={<Feather name="phone" />} size={5} ml="2" />
               }
               placeholder="Phone Number"
+              value={data.phone_number}
+              onChangeText={handlePhoneNumber}
             />
           </Stack>
-          <Button style={styles.submit}>Edit Profile</Button>
+          <Button style={styles.submit} onPress={handleSubmit}>
+            Edit Profile
+          </Button>
         </NativeBaseProvider>
       </View>
     </View>

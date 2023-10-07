@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import FeatherIcon from 'react-native-vector-icons/Feather';
+import {Alert, Image, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import Feather from 'react-native-vector-icons/Feather';
 import {
   Input,
   Icon,
@@ -12,14 +12,54 @@ import {
   Button,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {API_RECIPE} from '@env';
 
 export default function Login() {
   const navigation = useNavigation();
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const login = async () => {
+    try {
+      const res = await axios.post(`${API_RECIPE}/users/login`, {
+        email: email,
+        password: password,
+      });
+
+      const token = res.data.token;
+      const users_id = res.data.data.users_id.toString();
+
+      await AsyncStorage.setItem('token', token);
+      await AsyncStorage.setItem('users_id', users_id);
+      navigation.navigate('HomePage');
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+          navigation.navigate('HomePage');
+        }
+      } catch {
+        Alert.alert('No token u need login');
+        navigation.navigate('Login');
+      }
+    };
+    checkToken();
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <FeatherIcon name="user" style={styles.icon} />
+        <Feather name="user" style={styles.icon} />
       </View>
       <View style={styles.head}>
         <Text style={styles.welcome}>Welcome</Text>
@@ -36,9 +76,11 @@ export default function Login() {
             borderRadius="10"
             bgColor="#F5F5F5"
             InputLeftElement={
-              <Icon as={<FeatherIcon name="user" />} size={5} ml="2" />
+              <Icon as={<Feather name="user" />} size={5} ml="2" />
             }
-            placeholder="Name"
+            placeholder="email"
+            value={email}
+            onChangeText={setEmail}
           />
           <Input
             w={{
@@ -51,14 +93,18 @@ export default function Login() {
             type={show ? 'text' : 'password'}
             InputLeftElement={
               <Pressable onPress={() => setShow(!show)}>
-                <Icon as={<FeatherIcon name="lock" />} size={5} ml="2" />
+                <Icon as={<Feather name="lock" />} size={5} ml="2" />
               </Pressable>
             }
             placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
           />
         </Stack>
         <Text style={styles.fpw}>Forgot Password</Text>
-        <Button style={styles.submit}>Submit</Button>
+        <Button style={styles.submit} onPress={login}>
+          Submit
+        </Button>
         <View style={styles.signup}>
           <Text style={styles.dont}> Don’t have an account?</Text>
           <Text

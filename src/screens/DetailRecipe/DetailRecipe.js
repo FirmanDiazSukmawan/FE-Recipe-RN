@@ -9,29 +9,70 @@ import {
   useWindowDimensions,
   ScrollView,
   Pressable,
+  Alert,
+  TouchableOpacity,
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import img3 from '../../assets/image3.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import {dataDetail} from './dummy';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  getRecipeId,
+  getRecipeIdSelector,
+} from '../../redux/reducer/recipe/getRecipeIdSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  getUsersId,
+  getUsersIdSelector,
+} from '../../redux/reducer/users/getUserbyIdSlice';
+import {getLikedUsersIdSelector} from '../../redux/reducer/liked/getLikedUsersIdSlice';
+import {
+  createLiked,
+  createLikedSelector,
+} from '../../redux/reducer/liked/createLikedSlice';
 
 export default function DetailRecipe() {
+  const route = useRoute();
+  const {recipes_id} = route.params;
+  const dispatch = useDispatch();
+  const recipe = useSelector(getRecipeIdSelector);
+  const [loading, setLoading] = useState(false);
+  const users = useSelector(createLikedSelector);
+
+  // console.log(users);
+
+  const handleLike = async () => {
+    try {
+      const users_id = await AsyncStorage.getItem('users_id');
+      dispatch(createLiked({users_id, recipes_id}));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    dispatch(getRecipeId(recipes_id));
+    setLoading(false);
+  }, [dispatch, recipes_id]);
+
   const FirstRoute = () => (
     <View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center'}}>
       <ScrollView>
-        <View style={{width: 319}}>
-          {dataDetail?.ingredients?.split('-').map((item, index) => {
-            return (
-              <Text key={index} style={{textAlign: 'left', width: '100%'}}>
-                - {item}
+        {recipe?.data?.map((item, index) => {
+          const slicedIngredients = item.ingredients.slice('-');
+          return (
+            <View style={{width: 319}} key={index}>
+              <Text style={{textAlign: 'left', width: '100%'}}>
+                - {slicedIngredients}
               </Text>
-            );
-          })}
-        </View>
+            </View>
+          );
+        })}
       </ScrollView>
     </View>
   );
@@ -187,54 +228,60 @@ export default function DetailRecipe() {
   ]);
 
   const back = () => {
-    navigation.navigate('Home');
+    navigation.navigate('HomePage');
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.top}>
-        <Image
-          source={img3}
-          style={{
-            width: '100%',
-            height: 462,
-            position: 'relative',
-            objectFit: 'cover',
-          }}
-          resizeMode="cover"
-        />
-        <Ionicons
-          onPress={back}
-          name="arrow-back"
-          style={{
-            fontSize: 24,
-            color: '#F5F5F5',
-            position: 'absolute',
-            left: 10,
-            top: 10,
-          }}
-        />
-        <View style={styles.textInside}>
-          <View styles={styles.textLeft}>
-            <Text style={styles.textDesc}>Sandwich with Egg</Text>
-            <Text style={styles.textBy}>By Chef Ronald Humson</Text>
-          </View>
-          <View style={styles.iconRight}>
-            <View style={styles.icon1}>
-              <Ionicons
-                style={{fontSize: 36, color: '#E9E9E8'}}
-                name="bookmark-outline"
-              />
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : (
+        recipe?.data?.map((item, i) => (
+          <View style={styles.top} key={i}>
+            <Image
+              source={{uri: item.image}}
+              style={{
+                width: '100%',
+                height: 462,
+                position: 'relative',
+                objectFit: 'cover',
+              }}
+              resizeMode="cover"
+            />
+            <Ionicons
+              onPress={back}
+              name="arrow-back"
+              style={{
+                fontSize: 24,
+                color: '#F5F5F5',
+                position: 'absolute',
+                left: 10,
+                top: 10,
+              }}
+            />
+            <View style={styles.textInside}>
+              <View styles={styles.textLeft}>
+                <Text style={styles.textDesc}>{item.name_recipes}</Text>
+                <Text style={styles.textBy}>{item.creator}</Text>
+              </View>
+              <View style={styles.iconRight}>
+                <View style={styles.icon1}>
+                  <Ionicons
+                    style={{fontSize: 36, color: '#E9E9E8'}}
+                    name="bookmark-outline"
+                  />
+                </View>
+                <TouchableOpacity style={styles.icon2} onPress={handleLike}>
+                  <AntDesign
+                    style={{fontSize: 36, color: '#EFC81A'}}
+                    name="like2"
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.icon2}>
-              <AntDesign
-                style={{fontSize: 36, color: '#EFC81A'}}
-                name="like2"
-              />
-            </View>
           </View>
-        </View>
-      </View>
+        ))
+      )}
       <View
         style={{
           width: '100%',
@@ -292,7 +339,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
   textBy: {
-    color: '#B0B0B0',
+    color: 'brown',
     fontSize: 12,
   },
   textLeft: {

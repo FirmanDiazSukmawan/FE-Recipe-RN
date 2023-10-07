@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -7,7 +9,7 @@ import {useNavigation} from '@react-navigation/native';
 export default function DetailPopularMenu() {
   const navigation = useNavigation();
   const back = () => {
-    navigation.navigate('Home');
+    navigation.navigate('HomePage');
   };
   return (
     <View style={styles.container}>

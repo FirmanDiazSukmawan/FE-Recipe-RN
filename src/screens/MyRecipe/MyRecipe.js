@@ -1,13 +1,51 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
-import React from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  RefreshControl,
+  Pressable,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  getRecipeByUsersId,
+  getRecipeByUsersIdSelector,
+} from '../../redux/reducer/recipe/getRecipeUsersIdSlice';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default function MyRecipe() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const {users_id} = route.params;
+  const dispatch = useDispatch();
+  const recipeUsers = useSelector(getRecipeByUsersIdSelector);
+  const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  useEffect(() => {
+    dispatch(getRecipeByUsersId(users_id));
+    setLoading(false);
+    setRefresh(false);
+  }, [dispatch, users_id]);
+
+  const onRefresh = () => {
+    setRefresh(true);
+    if (dispatch(getRecipeByUsersId(users_id))) {
+      setRefresh(false);
+    }
+  };
+  const detailRecipe = recipes_id => {
+    navigation.navigate('DetailRecipe', {recipes_id});
+  };
+  // console.log(recipeUsers);
+
   const back = () => {
     navigation.navigate('Profile');
   };
@@ -18,85 +56,43 @@ export default function MyRecipe() {
         <Text style={styles.title}>MyRecipe</Text>
       </View>
       <View style={styles.section}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Margeritha</Text>
-              <Text style={styles.text2}>in Veg Pizza</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Veg Loaded</Text>
-              <Text style={styles.text2}>In Pizza Mania</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Farm House</Text>
-              <Text style={styles.text2}>In Pizza Mania</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Fresh Veggie</Text>
-              <Text style={styles.text2}>In Pizza Mania</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Tomato</Text>
-              <Text style={styles.text2}>In Pizza Mania</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Veg Loaded</Text>
-              <Text style={styles.text2}>In Pizza Mania</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+          }>
+          {loading ? (
+            <Text>loading...</Text>
+          ) : (
+            recipeUsers?.data?.map((item, index) => (
+              <View style={styles.gambar2} key={index}>
+                <Pressable
+                  style={styles.gambar2}
+                  key={item.recipes_id}
+                  onPress={() => detailRecipe(item.recipes_id)}>
+                  <Image
+                    source={{
+                      uri: item.image,
+                    }}
+                    style={{width: 80, height: 80, borderRadius: 16}}
+                  />
+                </Pressable>
+                <View style={styles.text}>
+                  <Text style={styles.text1}>{item.name_recipes}</Text>
+                  <Text style={styles.text2}>{item.creator}</Text>
+                  <Text style={styles.text2}>{item.created_at}</Text>
+                </View>
+                <View style={{flexDirection: 'row', textAlign: 'right'}}>
+                  <Text>
+                    <FontAwesome style={styles.icon1} name="edit" />{' '}
+                  </Text>
+                  <Text>
+                    <AntDesign style={styles.icon2} name="delete" />
+                  </Text>
+                </View>
+              </View>
+            ))
+          )}
         </ScrollView>
       </View>
     </View>
@@ -137,7 +133,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     height: 96,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
   },
   text: {
     width: '50%',
@@ -147,6 +143,7 @@ const styles = StyleSheet.create({
     color: '#18172B',
     fontSize: 16,
     marginBottom: 2,
+    fontWeight: 'bold',
   },
   text2: {
     color: '#6E80B0',
@@ -155,5 +152,13 @@ const styles = StyleSheet.create({
   text3: {
     color: '#18172B',
     fontSize: 14,
+  },
+  icon1: {
+    fontSize: 24,
+    color: '#EFC81A',
+  },
+  icon2: {
+    fontSize: 24,
+    color: 'red',
   },
 });

@@ -1,13 +1,64 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
-import React from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  Alert,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  getLikedUsersId,
+  getLikedUsersIdSelector,
+  loadingLikedUsersIdSelector,
+} from '../../redux/reducer/liked/getLikedUsersIdSlice';
+import {deleteLiked} from '../../redux/reducer/liked/deleteLikedSlice';
 
 export default function LikedRecipe() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const {users_id} = route.params;
+  const dispatch = useDispatch();
+  const liked = useSelector(getLikedUsersIdSelector);
+  const liked_id = liked?.data?.[0]?.liked_id;
+  const loading = useSelector(loadingLikedUsersIdSelector);
+  const [refresh, setRefresh] = useState(false);
+
+  useEffect(() => {
+    dispatch(getLikedUsersId(users_id));
+    setRefresh(false);
+  }, [dispatch, users_id]);
+
+  const handleDelete = () => {
+    try {
+      dispatch(deleteLiked(liked_id));
+      Alert.alert('deleted successfully');
+      onRefresh();
+    } catch {
+      Alert.alert('failed');
+    }
+  };
+  const onRefresh = async () => {
+    setRefresh(true);
+    try {
+      await dispatch(getLikedUsersId(users_id));
+      setRefresh(false);
+    } catch (error) {
+      console.error('Error Get recipe:', error);
+    }
+  };
+
+  // console.log(users_id);
+  // console.log(liked_id);
+
   const back = () => {
     navigation.navigate('Profile');
   };
@@ -18,85 +69,35 @@ export default function LikedRecipe() {
         <Text style={styles.title}>Liked Recipe</Text>
       </View>
       <View style={styles.section}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Margeritha</Text>
-              <Text style={styles.text2}>in Veg Pizza</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Veg Loaded</Text>
-              <Text style={styles.text2}>In Pizza Mania</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Farm House</Text>
-              <Text style={styles.text2}>In Pizza Mania</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Fresh Veggie</Text>
-              <Text style={styles.text2}>In Pizza Mania</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Tomato</Text>
-              <Text style={styles.text2}>In Pizza Mania</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
-          <View style={styles.gambar2}>
-            <Image
-              source={{
-                uri: 'https://reactnative.dev/img/tiny_logo.png',
-              }}
-              style={{width: 80, height: 80, borderRadius: 16}}
-            />
-            <View style={styles.text}>
-              <Text style={styles.text1}>Veg Loaded</Text>
-              <Text style={styles.text2}>In Pizza Mania</Text>
-              <Text style={styles.text3}>Spicy</Text>
-            </View>
-          </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+          }>
+          {loading ? (
+            <Text>Loading...</Text>
+          ) : (
+            liked?.data?.map((item, index) => (
+              <View style={styles.gambar2} key={index}>
+                <Image
+                  source={{
+                    uri: item.image,
+                  }}
+                  style={{width: 80, height: 80, borderRadius: 16}}
+                />
+                <View style={styles.text}>
+                  <Text style={styles.text1}>{item.name_recipes}</Text>
+                  <Text style={styles.text2}>{item.creator}</Text>
+                  <Text style={styles.text3}>{item.created_at}</Text>
+                </View>
+                <View style={{textAlign: 'right'}}>
+                  <TouchableOpacity onPress={handleDelete}>
+                    <AntDesign style={styles.icon2} name="delete" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))
+          )}
         </ScrollView>
       </View>
     </View>
@@ -129,19 +130,18 @@ const styles = StyleSheet.create({
   section: {
     width: '100%',
     height: '100%',
-    paddingTop: 30,
+    paddingTop: 20,
   },
   gambar2: {
     flexDirection: 'row',
     marginBottom: '2%',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-around',
     alignItems: 'center',
     height: 96,
-    paddingHorizontal: 30,
   },
   text: {
     width: '50%',
-    paddingHorizontal: 10,
+    marginLeft: -35,
   },
   text1: {
     color: '#18172B',
@@ -155,5 +155,9 @@ const styles = StyleSheet.create({
   text3: {
     color: '#18172B',
     fontSize: 14,
+  },
+  icon2: {
+    fontSize: 24,
+    color: 'red',
   },
 });

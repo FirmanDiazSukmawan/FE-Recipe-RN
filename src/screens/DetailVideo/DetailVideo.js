@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   createat: {
-    color: '#AAAAA',
+    color: 'rgba(170, 170, 170, 1)',
     fontSize: 12,
     textAlign: 'left',
     marginBottom: 15,
@@ -143,6 +143,6 @@ const styles = StyleSheet.create({
   },
   createNext: {
     fontSize: 8,
-    color: '#AAAAA',
+    color: 'rgba(170, 170, 170, 1)',
   },
 });
