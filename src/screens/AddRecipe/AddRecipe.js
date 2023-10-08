@@ -1,21 +1,84 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Feather from 'react-native-vector-icons/Feather';
 import {Icon, Input, NativeBaseProvider, Stack, Button} from 'native-base';
 import Video from 'react-native-video';
+import {useDispatch} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {createRecipe} from '../../redux/reducer/recipe/createRecipeSlice';
 
 export default function AddRecipe() {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [show, setShow] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const [data, setData] = useState({
+    name_recipes: '',
+    image: {
+      name: selectedImage?.fileName,
+      type: selectedImage?.type,
+      uri: selectedImage?.uri,
+    },
+    ingredients: '',
+    video: {
+      name: selectedVideo?.fileName,
+      type: selectedVideo?.type,
+      uri: selectedVideo?.uri,
+    },
+    name_video: '',
+  });
+  const name_recipes = text => {
+    setData({
+      ...data,
+      name_recipes: text,
+    });
+  };
+
+  const ingredients = text => {
+    setData({
+      ...data,
+      ingredients: text,
+    });
+  };
+
+  const name_video = text => {
+    setData({
+      ...data,
+      name_video: text,
+    });
+  };
+
+  const handleAddRecipe = async () => {
+    try {
+      const users_id = await AsyncStorage.getItem('users_id');
+      dispatch(createRecipe({users_id, data, selectedImage, selectedVideo}));
+      setLoading(true);
+      Alert.alert('create Recipe Succesfully');
+      setTimeout(() => {
+        navigation.navigate('Home');
+        setLoading(false);
+      }, 2000);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const back = () => {
     navigation.navigate('Profile');
   };
@@ -31,7 +94,7 @@ export default function AddRecipe() {
     try {
       const result = await launchCamera(options);
       if (!result.didCancel) {
-        const uri = result.assets[0].uri;
+        const uri = result.assets[0];
         setSelectedImage(uri);
         console.log('Gambar dari kamera:', uri);
       } else {
@@ -46,9 +109,9 @@ export default function AddRecipe() {
     try {
       const result = await launchImageLibrary(options);
       if (!result.didCancel) {
-        const uri = result.assets[0].uri;
+        const uri = result.assets[0];
         setSelectedImage(uri);
-        console.log('Image dari galeri:', result.uri);
+        console.log('Image dari galeri:', uri);
       }
     } catch (error) {
       console.error('Error saat membuka galeri:', error);
@@ -58,14 +121,15 @@ export default function AddRecipe() {
   const optionsVideo = {
     mediaType: 'video',
     videoQuality: 'high',
-    durationLimit: 60,
+    durationLimit: 300,
+    saveToPhotos: true,
   };
 
   const handleOpenCamVideo = async () => {
     try {
       const result = await launchCamera(optionsVideo);
       if (!result.didCancel) {
-        const uri = result.assets[0].uri;
+        const uri = result.assets[0];
         setSelectedVideo(uri);
         console.log('Video dari kamera:', uri);
       } else {
@@ -80,17 +144,50 @@ export default function AddRecipe() {
     try {
       const result = await launchImageLibrary(optionsVideo);
       if (!result.didCancel) {
-        const uri = result.assets[0].uri;
+        const uri = result.assets[0];
         setSelectedVideo(uri);
-        console.log('Video dari galeri:', result.uri);
+        console.log('Video dari galeri:', uri);
       }
     } catch (error) {
       console.error('Error saat membuka galeri:', error);
     }
   };
+  console.log(data);
 
+  useEffect(() => {
+    if (isFocused) {
+      resetPage(); // Fungsi resetPage akan dijelaskan di bawah
+    }
+  }, [isFocused]);
+
+  // Fungsi resetPage untuk mengatur ulang data dan mengganti tampilan halaman
+  const resetPage = () => {
+    setSelectedImage(null);
+    setSelectedVideo(null);
+    setData({
+      name_recipes: '',
+      image: {
+        name: null,
+        type: null,
+        uri: null,
+      },
+      ingredients: '',
+      video: {
+        name: null,
+        type: null,
+        uri: null,
+      },
+      name_video: '',
+    });
+    setLoading(false);
+  };
   return (
     <View style={styles.container}>
+      {loading && (
+        <Text style={{fontSize: 18, color: 'green', textAlign: 'center'}}>
+          Loading...
+        </Text>
+      )}
       <View style={styles.top}>
         <Text style={styles.title}>Add your Recipe</Text>
       </View>
@@ -100,7 +197,7 @@ export default function AddRecipe() {
           Add Image
         </Text>
         <Image
-          source={{uri: selectedImage}}
+          source={{uri: selectedImage?.uri}}
           style={{
             width: '75%',
             height: 150,
@@ -127,40 +224,50 @@ export default function AddRecipe() {
                 base: '75%',
                 md: '25%',
               }}
-              h="60"
+              h="45"
               borderRadius="10"
               bgColor="#F5F5F5"
               InputLeftElement={
                 <Icon as={<Feather name="book-open" />} size={5} ml="2" />
               }
               placeholder="Tittle"
+              value={data.name_recipes}
+              onChangeText={name_recipes}
             />
             <Input
               w={{
                 base: '75%',
                 md: '25%',
               }}
-              h="60"
+              h="45"
               borderRadius="10"
               bgColor="#F5F5F5"
               InputLeftElement={
                 <Icon as={<Feather name="list" />} size={5} ml="2" />
               }
               placeholder="Ingredients"
+              value={data.ingredients}
+              onChangeText={ingredients}
+            />
+            <Input
+              w={{
+                base: '75%',
+                md: '25%',
+              }}
+              h="45"
+              borderRadius="10"
+              bgColor="#F5F5F5"
+              InputLeftElement={
+                <Icon as={<Feather name="list" />} size={5} ml="2" />
+              }
+              placeholder="nameVideo"
+              value={data.name_video}
+              onChangeText={name_video}
             />
           </Stack>
           <View style={{alignItems: 'center', marginTop: 10}}>
-            <Text
-              style={{
-                fontSize: 13,
-                fontWeight: 'bold',
-                color: 'gray',
-                marginBottom: 3,
-              }}>
-              Add Video
-            </Text>
             <Video
-              source={{uri: selectedVideo}}
+              source={{uri: selectedVideo?.uri}}
               style={{
                 width: '100%',
                 height: 150,
@@ -182,7 +289,9 @@ export default function AddRecipe() {
               </TouchableOpacity>
             </View>
           </View>
-          <Button style={styles.submit}>Add Recipe</Button>
+          <Button style={styles.submit} onPress={handleAddRecipe}>
+            Add Recipe
+          </Button>
         </NativeBaseProvider>
       </View>
     </View>

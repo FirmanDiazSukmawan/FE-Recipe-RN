@@ -8,6 +8,7 @@ import updateUsersSlice from './reducer/users/updateUser';
 import getRecipeByUsersIdSlice from './reducer/recipe/getRecipeUsersIdSlice';
 import getLikedUsersIdSlice from './reducer/liked/getLikedUsersIdSlice';
 import createLikedSlice from './reducer/liked/createLikedSlice';
+import getSavedUserIdSlice from './reducer/saved/getSavedUserIdSlice';
 
 export const store = configureStore({
   reducer: {
@@ -19,5 +20,6 @@ export const store = configureStore({
     updateUsers: updateUsersSlice,
     createLiked: createLikedSlice,
     getLikedUsersId: getLikedUsersIdSlice,
+    getSavedUserId: getSavedUserIdSlice,
   },
 });

@@ -34,8 +34,8 @@ export default function Profile() {
   const MyRecipe = users_id => {
     navigation.navigate('MyRecipe', {users_id});
   };
-  const SavedRecipe = () => {
-    navigation.navigate('SavedRecipe');
+  const SavedRecipe = users_id => {
+    navigation.navigate('SavedRecipe', {users_id});
   };
   const LikedRecipe = users_id => {
     navigation.navigate('LikedRecipe', {users_id});
@@ -113,7 +113,9 @@ export default function Profile() {
           style={{
             marginTop: 15,
           }}>
-          <Pressable style={styles.objectBotProfile} onPress={SavedRecipe}>
+          <Pressable
+            style={styles.objectBotProfile}
+            onPress={() => SavedRecipe(users?.users_id)}>
             <View
               style={{
                 flexDirection: 'row',

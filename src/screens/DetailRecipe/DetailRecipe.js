@@ -9,16 +9,13 @@ import {
   useWindowDimensions,
   ScrollView,
   Pressable,
-  Alert,
   TouchableOpacity,
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import React, {useEffect, useState} from 'react';
-import img3 from '../../assets/image3.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
-import {dataDetail} from './dummy';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -26,15 +23,8 @@ import {
   getRecipeIdSelector,
 } from '../../redux/reducer/recipe/getRecipeIdSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  getUsersId,
-  getUsersIdSelector,
-} from '../../redux/reducer/users/getUserbyIdSlice';
-import {getLikedUsersIdSelector} from '../../redux/reducer/liked/getLikedUsersIdSlice';
-import {
-  createLiked,
-  createLikedSelector,
-} from '../../redux/reducer/liked/createLikedSlice';
+import {createLiked} from '../../redux/reducer/liked/createLikedSlice';
+import {createSaved} from '../../redux/reducer/saved/createSavedSlice';
 
 export default function DetailRecipe() {
   const route = useRoute();
@@ -42,7 +32,6 @@ export default function DetailRecipe() {
   const dispatch = useDispatch();
   const recipe = useSelector(getRecipeIdSelector);
   const [loading, setLoading] = useState(false);
-  const users = useSelector(createLikedSelector);
 
   // console.log(users);
 
@@ -50,6 +39,15 @@ export default function DetailRecipe() {
     try {
       const users_id = await AsyncStorage.getItem('users_id');
       dispatch(createLiked({users_id, recipes_id}));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSaved = async () => {
+    try {
+      const users_id = await AsyncStorage.getItem('users_id');
+      dispatch(createSaved({users_id, recipes_id}));
     } catch (err) {
       console.log(err);
     }
@@ -265,12 +263,12 @@ export default function DetailRecipe() {
                 <Text style={styles.textBy}>{item.creator}</Text>
               </View>
               <View style={styles.iconRight}>
-                <View style={styles.icon1}>
+                <TouchableOpacity style={styles.icon1} onPress={handleSaved}>
                   <Ionicons
                     style={{fontSize: 36, color: '#E9E9E8'}}
                     name="bookmark-outline"
                   />
-                </View>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.icon2} onPress={handleLike}>
                   <AntDesign
                     style={{fontSize: 36, color: '#EFC81A'}}

@@ -1,36 +1,213 @@
-import React from "react";
-import { VStack, Input, Button, IconButton, Icon, Text, NativeBaseProvider, Center, Box, Divider, Heading } from "native-base";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
+import React, {useEffect} from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  getLoadingSelector,
+  getRecipe,
+  getRecipeSelector,
+} from '../../redux/reducer/recipe/getRecipeSlice';
+import {createLiked} from '../../redux/reducer/liked/createLikedSlice';
+import {createSaved} from '../../redux/reducer/saved/createSavedSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function SearchBar() {
-  return <VStack my="4" space={5} w="100%" maxW="300px" divider={<Box px="2">
-          <Divider />
-        </Box>}>
-      <VStack w="100%" space={5} alignSelf="center">
-        <Heading fontSize="lg">Cupertino</Heading>
-        <Input placeholder="Search" variant="filled" width="100%" borderRadius="10" py="1" px="2" InputLeftElement={<Icon ml="2" size="4" color="gray.400" as={<Ionicons name="ios-search" />} />} />
-      </VStack>
+export default function DetailPopularMenu() {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const [refresh, setRefresh] = React.useState(false);
+  const recipe = useSelector(getRecipeSelector);
+  const loading = useSelector(getLoadingSelector);
+  console.log(recipe);
 
-      <VStack w="100%" space={5} alignSelf="center">
-        <Heading fontSize="lg">Material</Heading>
-        <Input placeholder="Search People & Places" width="100%" borderRadius="4" py="3" px="1" fontSize="14" InputLeftElement={<Icon m="2" ml="3" size="6" color="gray.400" as={<MaterialIcons name="search" />} />} InputRightElement={<Icon m="2" mr="3" size="6" color="gray.400" as={<MaterialIcons name="mic" />} />} />
-      </VStack>
-    </VStack>;
+  useEffect(() => {
+    try {
+      dispatch(getRecipe());
+    } catch (err) {
+      console.log(err);
+    }
+  }, [dispatch]);
+
+  const onRefresh = async () => {
+    setRefresh(true);
+    try {
+      await dispatch(getRecipe());
+      setRefresh(false);
+    } catch (error) {
+      console.error('Error Get recipe:', error);
+    }
+  };
+
+  const handleLike = async recipes_id => {
+    try {
+      const users_id = await AsyncStorage.getItem('users_id');
+      dispatch(createLiked({users_id, recipes_id}));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSaved = async recipes_id => {
+    try {
+      const users_id = await AsyncStorage.getItem('users_id');
+      dispatch(createSaved({users_id, recipes_id}));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const detailRecipe = recipes_id => {
+    navigation.navigate('DetailRecipe', {recipes_id});
+  };
+
+  const back = () => {
+    navigation.navigate('HomePage');
+  };
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+        }>
+        <View style={styles.top}>
+          <Ionicons name="chevron-back" style={styles.icon} onPress={back} />
+          <Text style={styles.title}>DetailPopularMenu</Text>
+        </View>
+        <View style={styles.section}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {loading ? (
+              <Text> Loading....</Text>
+            ) : (
+              recipe?.data?.map((item, index) => (
+                <View style={styles.gambar2} key={index}>
+                  <TouchableOpacity
+                    onPress={() => detailRecipe(item.recipes_id)}>
+                    <Image
+                      source={{
+                        uri: item.image,
+                      }}
+                      style={{width: 80, height: 80, borderRadius: 16}}
+                    />
+                  </TouchableOpacity>
+                  <View style={styles.text}>
+                    <Text style={styles.text1}>{item.name_recipes}</Text>
+                    <Text style={styles.text2}>{item.creator}</Text>
+                    <Text style={styles.text3}>{item.created_at}</Text>
+                  </View>
+                  <View style={styles.iconRight}>
+                    <TouchableOpacity
+                      style={styles.icon1}
+                      onPress={() => handleSaved(item.recipes_id)}>
+                      <Ionicons
+                        style={{fontSize: 24, color: '#E9E9E8'}}
+                        name="bookmark-outline"
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.icon2}
+                      onPress={() => handleLike(item.recipes_id)}>
+                      <AntDesign
+                        style={{color: '#EFC81A', fontSize: 24}}
+                        name="like2"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))
+            )}
+          </ScrollView>
+        </View>
+      </ScrollView>
+    </View>
+  );
 }
 
-function Example() {
-  return <Center flex={1} px="2">
-      <SearchBar />
-    </Center>;
-}
-
-    export default () => {
-        return (
-          <NativeBaseProvider>
-            <Center flex={1} px="3">
-                <Example />
-            </Center>
-          </NativeBaseProvider>
-        );
-    };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  top: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    position: 'relative',
+  },
+  icon: {
+    fontSize: 20,
+    marginRight: 10,
+    position: 'absolute',
+    left: 15,
+  },
+  title: {
+    fontSize: 18,
+    color: '#F1CD31',
+    textAlign: 'center',
+  },
+  section: {
+    width: '100%',
+    height: '100%',
+    paddingTop: 30,
+  },
+  gambar2: {
+    flexDirection: 'row',
+    marginBottom: '2%',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 96,
+  },
+  icon1: {
+    width: 35,
+    height: 35,
+    backgroundColor: '#EFC81A',
+    borderRadius: 17.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  icon2: {
+    width: 35,
+    height: 35,
+    backgroundColor: '#fff',
+    borderRadius: 17.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#EEC302',
+    marginLeft: 5,
+  },
+  text: {
+    width: 100,
+    marginLeft: -50,
+  },
+  text1: {
+    color: '#18172B',
+    fontSize: 16,
+    marginBottom: 2,
+  },
+  text2: {
+    color: '#6E80B0',
+    fontSize: 12,
+  },
+  text3: {
+    color: '#18172B',
+    fontSize: 14,
+  },
+  iconRight: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: -25,
+  },
+});

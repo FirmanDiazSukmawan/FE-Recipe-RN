@@ -9,6 +9,7 @@ import {
   Alert,
   TouchableOpacity,
   RefreshControl,
+  Pressable,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -56,6 +57,10 @@ export default function LikedRecipe() {
     }
   };
 
+  const detailRecipe = recipes_id => {
+    navigation.navigate('DetailRecipe', {recipes_id});
+  };
+
   // console.log(users_id);
   // console.log(liked_id);
 
@@ -79,20 +84,25 @@ export default function LikedRecipe() {
           ) : (
             liked?.data?.map((item, index) => (
               <View style={styles.gambar2} key={index}>
-                <Image
-                  source={{
-                    uri: item.image,
-                  }}
-                  style={{width: 80, height: 80, borderRadius: 16}}
-                />
+                <Pressable onPress={() => detailRecipe(item.recipes_id)}>
+                  <Image
+                    source={{
+                      uri: item.image,
+                    }}
+                    style={{width: 80, height: 80, borderRadius: 16}}
+                  />
+                </Pressable>
                 <View style={styles.text}>
                   <Text style={styles.text1}>{item.name_recipes}</Text>
                   <Text style={styles.text2}>{item.creator}</Text>
                   <Text style={styles.text3}>{item.created_at}</Text>
                 </View>
                 <View style={{textAlign: 'right'}}>
-                  <TouchableOpacity onPress={handleDelete}>
-                    <AntDesign style={styles.icon2} name="delete" />
+                  <TouchableOpacity onPress={handleDelete} style={styles.icon2}>
+                    <AntDesign
+                      style={{color: '#EFC81A', fontSize: 24}}
+                      name="like2"
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -157,7 +167,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   icon2: {
-    fontSize: 24,
-    color: 'red',
+    width: 35,
+    height: 35,
+    backgroundColor: '#fff',
+    borderRadius: 17.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#EEC302',
   },
 });

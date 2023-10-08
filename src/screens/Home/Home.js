@@ -7,6 +7,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  Touchable,
+  TouchableHighlight,
+  TouchableOpacity,
   View,
   ViewBase,
 } from 'react-native';
@@ -14,6 +17,7 @@ import React, {useEffect, useState} from 'react';
 import {Icon, Input, NativeBaseProvider, VStack} from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -109,7 +113,7 @@ export default function Home() {
                       <View style={styles.gambar} key={index}>
                         <Pressable
                           style={styles.gambar1}
-                          onPress={detailPopular}>
+                          onPress={() => detailRecipe(item.recipes_id)}>
                           <Image
                             source={{uri: item.image}}
                             style={{
@@ -128,7 +132,15 @@ export default function Home() {
                   )}
                 </ScrollView>
               </View>
-              <Text style={styles.pop}> Popular Recipe</Text>
+              <View style={styles.pop}>
+                <Text style={styles.popular}> Popular Recipe</Text>
+                <TouchableOpacity onPress={detailPopular}>
+                  <Text style={styles.seeMore}>
+                    See More
+                    <Entypo name="chevron-right" />
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <View>
                 <ScrollView showsVerticalScrollIndicator={false}>
                   {loading ? (
@@ -231,13 +243,26 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
   },
   pop: {
+    fontSize: 18,
+    fontFamily: 'Airbnb Cereal App',
+    marginTop: 25,
+    marginBottom: 40,
+    paddingHorizontal: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  popular: {
     color: '#18172B',
     fontSize: 18,
     fontFamily: 'Airbnb Cereal App',
     textAlign: 'left',
-    marginTop: 25,
-    marginBottom: 40,
-    paddingLeft: 30,
+    backgroundColor: '#FFB200',
+  },
+  seeMore: {
+    fontSize: 13,
+    fontFamily: 'Airbnb Cereal App',
+    textAlign: 'right',
   },
   name: {
     width: 70,
