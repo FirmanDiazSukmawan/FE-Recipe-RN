@@ -8,6 +8,8 @@ import {
   ScrollView,
   RefreshControl,
   Pressable,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,6 +21,8 @@ import {
   getRecipeByUsersIdSelector,
 } from '../../redux/reducer/recipe/getRecipeUsersIdSlice';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import EditProfile from '../EditProfile/EditProfile';
+import {deleteRecipe} from '../../redux/reducer/recipe/deleteRecipeSlice';
 
 export default function MyRecipe() {
   const navigation = useNavigation();
@@ -44,7 +48,20 @@ export default function MyRecipe() {
   const detailRecipe = recipes_id => {
     navigation.navigate('DetailRecipe', {recipes_id});
   };
-  // console.log(recipeUsers);
+
+  const EditRecipe = recipes_id => {
+    navigation.navigate('EditRecipe', {recipes_id});
+  };
+
+  const handleDelete = recipes_id => {
+    try {
+      dispatch(deleteRecipe(recipes_id));
+      Alert.alert('deleted successfully');
+      onRefresh();
+    } catch {
+      Alert.alert('failed');
+    }
+  };
 
   const back = () => {
     navigation.navigate('Profile');
@@ -83,11 +100,15 @@ export default function MyRecipe() {
                   <Text style={styles.text2}>{item.created_at}</Text>
                 </View>
                 <View style={{flexDirection: 'row', textAlign: 'right'}}>
+                  <TouchableOpacity onPress={() => EditRecipe(item.recipes_id)}>
+                    <FontAwesome style={styles.icon1} name="edit" />
+                  </TouchableOpacity>
                   <Text>
-                    <FontAwesome style={styles.icon1} name="edit" />{' '}
-                  </Text>
-                  <Text>
-                    <AntDesign style={styles.icon2} name="delete" />
+                    <AntDesign
+                      style={styles.icon2}
+                      name="delete"
+                      onPress={() => handleDelete(item.recipes_id)}
+                    />
                   </Text>
                 </View>
               </View>

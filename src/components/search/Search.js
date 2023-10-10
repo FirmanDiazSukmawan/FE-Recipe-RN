@@ -29,7 +29,7 @@ export default function DetailPopularMenu() {
   const [refresh, setRefresh] = React.useState(false);
   const recipe = useSelector(getRecipeSelector);
   const loading = useSelector(getLoadingSelector);
-  console.log(recipe);
+  // console.log(recipe);
 
   useEffect(() => {
     try {

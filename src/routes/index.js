@@ -19,6 +19,8 @@ import AddRecipe from '../screens/AddRecipe/AddRecipe';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import EditRecipe from '../screens/editRecipe/editRecipe';
+import Comment from '../screens/Comment/comment';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -75,6 +77,16 @@ function Auth() {
         <Stack.Screen
           name="EditProfile"
           component={EditProfile}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditRecipe"
+          component={EditRecipe}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Comment"
+          component={Comment}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

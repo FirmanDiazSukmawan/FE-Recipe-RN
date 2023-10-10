@@ -6,45 +6,50 @@ import React from 'react';
 import Video from 'react-native-video';
 import img4 from '../../assets/image4.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {getRecipeIdSelector} from '../../redux/reducer/recipe/getRecipeIdSlice';
 
 export default function DetailVideo() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const recipe = useSelector(getRecipeIdSelector);
+  console.log(recipe);
+  const {recipes_id} = route.params;
   const back = () => {
-    navigation.navigate('DetailRecipe');
+    navigation.navigate('DetailRecipe', {recipes_id});
   };
+
   return (
     <View style={styles.container}>
-      <View style={styles.top}>
-        <Video
-          source={{
-            uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
-          }}
-          style={styles.video}
-          controls={true}
-          resizeMode="cover"
-          autoPlay={false}
-        />
-        <Ionicons
-          onPress={back}
-          name="arrow-back"
-          style={{
-            fontSize: 24,
-            color: '#F5F5F5',
-            position: 'absolute',
-            left: 10,
-            top: 10,
-          }}
-        />
-        <View style={styles.desc}>
-          <Text style={styles.title}>
-            Beef Steak with Curry Sauce - [Step 4] Cut the condiment and then
-            mix it
-          </Text>
-          <Text style={styles.createat}> 3 month ago</Text>
+      {recipe?.data?.map((item, index) => (
+        <View style={styles.top} key={index}>
+          <Video
+            source={{
+              uri: item.video,
+            }}
+            style={styles.video}
+            controls={true}
+            resizeMode="cover"
+            autoPlay={false}
+          />
+          <Ionicons
+            onPress={back}
+            name="arrow-back"
+            style={{
+              fontSize: 24,
+              color: '#F5F5F5',
+              position: 'absolute',
+              left: 10,
+              top: 10,
+            }}
+          />
+          <View style={styles.desc}>
+            <Text style={styles.title}>{item.name_video}</Text>
+            <Text style={styles.createat}> {item.created_at}</Text>
+          </View>
         </View>
-      </View>
-
+      ))}
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.nextOne}>
           <Image

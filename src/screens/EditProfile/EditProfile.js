@@ -1,6 +1,6 @@
-/* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
+
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Feather from 'react-native-vector-icons/Feather';
@@ -27,7 +26,7 @@ export default function EditProfile() {
   const {users_id} = route.params;
   const dispatch = useDispatch();
   const user = useSelector(getUsersIdSelector);
-  // console.log(user);
+  console.log(user);
   // console.log(users_id);
   const back = () => {
     navigation.navigate('Profile');
@@ -55,7 +54,7 @@ export default function EditProfile() {
         uri: selectedImage?.uri,
       },
     });
-  }, []);
+  }, [user, selectedImage]);
 
   // console.log(selectedImage);
 

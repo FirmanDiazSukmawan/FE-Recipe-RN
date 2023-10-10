@@ -10,6 +10,11 @@ import {
   ScrollView,
   Pressable,
   TouchableOpacity,
+  TextInput,
+  Button,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import React, {useEffect, useState} from 'react';
@@ -25,14 +30,24 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createLiked} from '../../redux/reducer/liked/createLikedSlice';
 import {createSaved} from '../../redux/reducer/saved/createSavedSlice';
+import {createComment} from '../../redux/reducer/comment/createCommentSlice';
+import {
+  getCommentRecipeId,
+  getCommentRecipeIdSelector,
+} from '../../redux/reducer/comment/getCommentRecipeIdSlice';
+import {NativeBaseProvider, TextArea} from 'native-base';
 
 export default function DetailRecipe() {
   const route = useRoute();
   const {recipes_id} = route.params;
   const dispatch = useDispatch();
   const recipe = useSelector(getRecipeIdSelector);
+  const comment = useSelector(getCommentRecipeIdSelector);
+  console.log(comment);
   const [loading, setLoading] = useState(false);
+  const [commen, setCommen] = useState('');
 
+  console.log(commen);
   // console.log(users);
 
   const handleLike = async () => {
@@ -53,8 +68,21 @@ export default function DetailRecipe() {
     }
   };
 
+  const handleComment = async () => {
+    try {
+      navigation.navigate('Comment', {recipes_id});
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     dispatch(getRecipeId(recipes_id));
+    setLoading(false);
+  }, [dispatch, recipes_id]);
+
+  useEffect(() => {
+    dispatch(getCommentRecipeId(recipes_id));
     setLoading(false);
   }, [dispatch, recipes_id]);
 
@@ -77,34 +105,50 @@ export default function DetailRecipe() {
 
   const navigation = useNavigation();
   const detailVideo = () => {
-    navigation.navigate('DetailVideo');
+    navigation.navigate('DetailVideo', {recipes_id});
   };
   const SecondRoute = () => (
     <View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center'}}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{width: 319, marginBottom: 10}}>
-          <View style={{flexDirection: 'row'}}>
-            <Pressable
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: 16,
-                backgroundColor: '#EEC302',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={detailVideo}>
-              <Feather name="play" style={{fontSize: 18, color: '#F8F8F8'}} />
-            </Pressable>
-            <View style={{marginLeft: 30, justifyContent: 'center'}}>
-              <Text style={{color: '#666', fontSize: 16}}>Step 1</Text>
-              <Text style={{color: '#B6B6B6', fontSize: 12}}>
-                Boil eggs for 3 minutes
-              </Text>
+        <View
+          style={{
+            width: 319,
+            marginVertical: 10,
+            backgroundColor: '#FAF7ED',
+            borderTopRightRadius: 159.5,
+            borderBottomRightRadius: 159.5,
+          }}>
+          {recipe?.data?.map((item, index) => (
+            <View style={{flexDirection: 'row'}} key={index}>
+              <Pressable
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 16,
+                  backgroundColor: '#EEC302',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                onPress={() => detailVideo(item.recipes_id)}>
+                <Feather name="play" style={{fontSize: 18, color: '#F8F8F8'}} />
+              </Pressable>
+              <View style={{marginLeft: 30, justifyContent: 'center'}}>
+                <Text style={{color: '#666', fontSize: 16}}>Step 1</Text>
+                <Text style={{color: '#B6B6B6', fontSize: 12}}>
+                  {item.name_video}
+                </Text>
+              </View>
             </View>
-          </View>
+          ))}
         </View>
-        <View style={{width: 319, marginBottom: 10}}>
+        <View
+          style={{
+            width: 319,
+            marginBottom: 10,
+            backgroundColor: '#FAF7ED',
+            borderTopRightRadius: 159.5,
+            borderBottomRightRadius: 159.5,
+          }}>
           <View style={{flexDirection: 'row'}}>
             <View
               style={{
@@ -125,7 +169,14 @@ export default function DetailRecipe() {
             </View>
           </View>
         </View>
-        <View style={{width: 319, marginBottom: 10}}>
+        <View
+          style={{
+            width: 319,
+            marginBottom: 10,
+            backgroundColor: '#FAF7ED',
+            borderTopRightRadius: 159.5,
+            borderBottomRightRadius: 159.5,
+          }}>
           <View style={{flexDirection: 'row'}}>
             <View
               style={{
@@ -146,68 +197,57 @@ export default function DetailRecipe() {
             </View>
           </View>
         </View>
-        <View style={{width: 319, marginBottom: 10}}>
-          <View style={{flexDirection: 'row'}}>
-            <View
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: 16,
-                backgroundColor: '#EEC302',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Feather name="play" style={{fontSize: 18, color: '#F8F8F8'}} />
-            </View>
-            <View style={{marginLeft: 30, justifyContent: 'center'}}>
-              <Text style={{color: '#666', fontSize: 16}}>Step 3</Text>
-              <Text style={{color: '#B6B6B6', fontSize: 12}}>
-                Boil eggs for 3 minutes
-              </Text>
-            </View>
-          </View>
+
+        <View style={{paddingTop: 15}}>
+          <Button
+            title="Post Comment"
+            onPress={() => handleComment(recipes_id)}
+            color="#EFC81A"
+          />
         </View>
-        <View style={{width: 319, marginBottom: 10}}>
-          <View style={{flexDirection: 'row'}}>
-            <View
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: 16,
-                backgroundColor: '#EEC302',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Feather name="play" style={{fontSize: 18, color: '#F8F8F8'}} />
-            </View>
-            <View style={{marginLeft: 30, justifyContent: 'center'}}>
-              <Text style={{color: '#666', fontSize: 16}}>Step 4</Text>
-              <Text style={{color: '#B6B6B6', fontSize: 12}}>
-                Boil eggs for 3 minutes
-              </Text>
-            </View>
-          </View>
+        <View style={{paddingTop: 15}}>
+          <Text style={{color: '#666', fontSize: 12}}> Comment :</Text>
         </View>
-        <View style={{width: 319}}>
-          <View style={{flexDirection: 'row'}}>
-            <View
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: 16,
-                backgroundColor: '#EEC302',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Feather name="play" style={{fontSize: 18, color: '#F8F8F8'}} />
-            </View>
-            <View style={{marginLeft: 30, justifyContent: 'center'}}>
-              <Text style={{color: '#666', fontSize: 16}}>Step 5</Text>
-              <Text style={{color: '#B6B6B6', fontSize: 12}}>
-                Boil eggs for 3 minutes
-              </Text>
-            </View>
-          </View>
+        <View>
+          {loading ? (
+            <Text>Loading....</Text>
+          ) : (
+            comment?.data?.map((item, index) => (
+              <View
+                style={{
+                  paddingVertical: 10,
+                  flexDirection: 'row',
+                  paddingLeft: 10,
+                }}
+                key={index}>
+                <View
+                  style={{
+                    paddingVertical: 10,
+                    flexDirection: 'row',
+                    backgroundColor: '#e1eded',
+                    borderRadius: 15,
+                    width: 320,
+                    paddingLeft: 10,
+                  }}>
+                  <Image
+                    source={{
+                      uri: item.imageprofile,
+                    }}
+                    style={{width: 32, height: 32, borderRadius: 32}}
+                  />
+                  <View
+                    style={{
+                      paddingLeft: 10,
+                      width: 280,
+                      borderRadius: 10,
+                    }}>
+                    <Text style={{color: '#151a1a'}}>{item.creator}</Text>
+                    <Text style={{color: '#596e6e'}}>{item.commen}</Text>
+                  </View>
+                </View>
+              </View>
+            ))
+          )}
         </View>
       </ScrollView>
     </View>
@@ -218,7 +258,7 @@ export default function DetailRecipe() {
     second: SecondRoute,
   });
   const layout = useWindowDimensions();
-
+  // console.log(layout);
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'first', title: 'Ingredients'},
@@ -240,11 +280,11 @@ export default function DetailRecipe() {
               source={{uri: item.image}}
               style={{
                 width: '100%',
-                height: 462,
+                height: 300,
                 position: 'relative',
-                objectFit: 'cover',
+                objectFit: 'fill',
               }}
-              resizeMode="cover"
+              resizeMode="contain"
             />
             <Ionicons
               onPress={back}
@@ -283,13 +323,14 @@ export default function DetailRecipe() {
       <View
         style={{
           width: '100%',
-          height: '40%',
+          height: '62%',
           backgroundColor: '#FFF',
           marginTop: -30,
           borderRadius: 15,
         }}>
         <TabView
           animationEnabled={false}
+          // keyboardDismissMode="none"
           swipeEnabled={false}
           navigationState={{index, routes}}
           renderScene={renderScene}
@@ -318,7 +359,7 @@ const styles = StyleSheet.create({
   },
   top: {
     width: '100%',
-    height: 462,
+    height: 300,
     position: 'relative',
     borderRadius: 10,
   },
@@ -362,5 +403,19 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  textAreaContainer: {
+    borderColor: 'gray',
+    borderWidth: 1,
+    padding: 5,
+    marginTop: 15,
+    backgroundColor: '#FAF7ED',
+    width: 319,
+    height: 150,
+  },
+  textArea: {
+    height: 150,
+    justifyContent: 'flex-start',
+    width: 319,
   },
 });

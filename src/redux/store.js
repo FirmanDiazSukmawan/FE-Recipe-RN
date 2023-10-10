@@ -9,6 +9,8 @@ import getRecipeByUsersIdSlice from './reducer/recipe/getRecipeUsersIdSlice';
 import getLikedUsersIdSlice from './reducer/liked/getLikedUsersIdSlice';
 import createLikedSlice from './reducer/liked/createLikedSlice';
 import getSavedUserIdSlice from './reducer/saved/getSavedUserIdSlice';
+import createCommentSlice from './reducer/comment/createCommentSlice';
+import getCommentRecipeIdSlice from './reducer/comment/getCommentRecipeIdSlice';
 
 export const store = configureStore({
   reducer: {
@@ -21,5 +23,7 @@ export const store = configureStore({
     createLiked: createLikedSlice,
     getLikedUsersId: getLikedUsersIdSlice,
     getSavedUserId: getSavedUserIdSlice,
+    createComment: createCommentSlice,
+    getCommentRecipeId: getCommentRecipeIdSlice,
   },
 });

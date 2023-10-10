@@ -8,7 +8,7 @@ export const deleteLiked = createAsyncThunk(
   async liked_id => {
     try {
       const response = await axios.delete(`${API_RECIPE}/liked/${liked_id}`);
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (err) {
       console.log(err);

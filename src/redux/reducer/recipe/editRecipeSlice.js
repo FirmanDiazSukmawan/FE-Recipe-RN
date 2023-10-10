@@ -4,28 +4,27 @@ import {API_RECIPE} from '@env';
 import axios from 'axios';
 import {Alert} from 'react-native';
 
-export const createRecipe = createAsyncThunk(
-  'recipe/createRecipe',
-  async ({users_id, data, selectedImage, selectedVideo}) => {
-    // console.log(users_id);
+export const updateRecipe = createAsyncThunk(
+  'recipe/updateRecipe',
+  async ({recipes_id, data, selectedImage, selectedVideo}) => {
+    // console.log(recipes_id);
     const formdataTosend = new FormData();
-    formdataTosend.append('name_recipes', data.name_recipes);
+    formdataTosend.append('name_recipes', data?.name_recipes);
     formdataTosend.append('image', {
       name: selectedImage?.fileName,
       type: selectedImage?.type,
       uri: selectedImage?.uri,
     });
-    formdataTosend.append('ingredients', data.ingredients);
+    formdataTosend.append('ingredients', data?.ingredients);
     formdataTosend.append('video', {
       name: selectedVideo?.fileName,
       type: selectedVideo?.type,
       uri: selectedVideo?.uri,
     });
-    formdataTosend.append('name_video', data.name_video);
-    formdataTosend.append('users_id', users_id);
+    formdataTosend.append('name_video', data?.name_video);
     try {
-      const response = await axios.post(
-        `${API_RECIPE}/recipe/`,
+      const response = await axios.put(
+        `${API_RECIPE}/recipe/${recipes_id}`,
         formdataTosend,
         {
           headers: {
@@ -41,8 +40,8 @@ export const createRecipe = createAsyncThunk(
   },
 );
 
-export const createRecipeSlice = createSlice({
-  name: 'createRecipe',
+export const updateRecipeSlice = createSlice({
+  name: 'updateRecipe',
   initialState: {
     status: 'idle',
     loading: false,
@@ -51,21 +50,21 @@ export const createRecipeSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
-      .addCase(createRecipe.pending, state => {
+      .addCase(updateRecipe.pending, state => {
         state.loading = true;
       })
-      .addCase(createRecipe.fulfilled, (state, action) => {
+      .addCase(updateRecipe.fulfilled, (state, action) => {
         state.loading = false;
         state.recipe = action?.payload;
       })
-      .addCase(createRecipe.rejected, (state, action) => {
+      .addCase(updateRecipe.rejected, (state, action) => {
         state.loading = false;
         state.recipe = action?.payload;
       });
   },
 });
 
-export const createRecipeSelector = state => state.createRecipe.recipe;
-export const loadingrecipeUsersIdSelector = state => state.createRecipe.loading;
+export const updateRecipeSelector = state => state.updateRecipe.recipe;
+export const loadingrecipeUsersIdSelector = state => state.updateRecipe.loading;
 
-export default createRecipeSlice.reducer;
+export default updateRecipeSlice.reducer;
