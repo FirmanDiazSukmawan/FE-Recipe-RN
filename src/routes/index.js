@@ -21,6 +21,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import EditRecipe from '../screens/editRecipe/editRecipe';
 import Comment from '../screens/Comment/comment';
+import search from '../screens/Search/search';
+import Search from '../screens/Search/search';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -96,7 +98,11 @@ function Auth() {
 
 function Router() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: '#EEC302',
+        tabBarInactiveTintColor: '#6E80B0',
+      }}>
       <Tab.Screen
         name="Home"
         component={Home}
@@ -104,6 +110,17 @@ function Router() {
           title: 'Home',
           tabBarIcon: ({color, size}) => (
             <Feather name="home" color={color} size={size} />
+          ),
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          title: 'Search',
+          tabBarIcon: ({color, size}) => (
+            <Feather name="search" color={color} size={size} />
           ),
           headerShown: false,
         }}

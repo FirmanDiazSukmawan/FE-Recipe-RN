@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
   ViewBase,
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Icon, Input, NativeBaseProvider, VStack} from 'native-base';
@@ -76,13 +77,13 @@ export default function Home() {
           <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
         }>
         <View style={styles.section}>
-          <View style={styles.isi}>
+          <SafeAreaView style={styles.isi}>
             <VStack
               w="100%"
               space={5}
               alignItems="center"
-              marginBottom={8}
-              style={{paddingHorizontal: 30}}>
+              marginBottom={3}
+              style={{paddingHorizontal: 30, paddingVertical: 10}}>
               <Input
                 placeholder="Search Pasta, Bread, etc"
                 variant="filled"
@@ -91,6 +92,7 @@ export default function Home() {
                 borderRadius="15"
                 py="1"
                 px="2"
+                backgroundColor="#EFEFEF"
                 InputLeftElement={
                   <Icon
                     ml="2"
@@ -103,7 +105,7 @@ export default function Home() {
             </VStack>
 
             <View styles={styles.content}>
-              <Text style={styles.new}> New Recipe</Text>
+              <Text style={styles.new}> New Recipes</Text>
               <View>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   {loading ? (
@@ -114,6 +116,16 @@ export default function Home() {
                         <Pressable
                           style={styles.gambar1}
                           onPress={() => detailRecipe(item.recipes_id)}>
+                          <View
+                            style={{
+                              backgroundColor: 'rgba(80, 84, 83, 0.3)',
+                              zIndex: 1,
+                              width: '100%',
+                              height: 160,
+                              position: 'absolute',
+                              borderRadius: 10,
+                            }}
+                          />
                           <Image
                             source={{uri: item.image}}
                             style={{
@@ -133,7 +145,7 @@ export default function Home() {
                 </ScrollView>
               </View>
               <View style={styles.pop}>
-                <Text style={styles.popular}> Popular Recipe</Text>
+                <Text style={styles.popular}> Popular Recipes</Text>
                 <TouchableOpacity onPress={detailPopular}>
                   <Text style={styles.seeMore}>
                     See More
@@ -168,29 +180,48 @@ export default function Home() {
                                 color: '#18172B',
                                 fontSize: 16,
                                 fontWeight: 'bold',
-                                marginLeft: -23,
                               }}>
                               {item.name_recipes}
                             </Text>
+                            {/* <View style={{flexDirection: 'row'}}> */}
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                              }}>
+                              <View style={{paddingRight: 5}}>
+                                <FontAwesomeIcon
+                                  name="star"
+                                  style={styles.icon}
+                                />
+                              </View>
+                              <Text
+                                style={{
+                                  fontWeight: '500',
+                                  color: '#18172B',
+                                  fontSize: 12,
+                                }}>
+                                4.6
+                              </Text>
+                            </View>
                             <Text
                               style={{
-                                marginLeft: -23,
+                                color: '#6E80B0',
+                                fontSize: 12,
+                                fontWeight: 400,
                               }}>
                               {item.creator}
                             </Text>
-                            <Text
-                              style={{
-                                marginLeft: -23,
-                              }}>
-                              <FontAwesomeIcon
-                                name="star"
-                                style={styles.icon}
-                              />
-                              4.6 .
-                            </Text>
+                            {/* </View> */}
                           </View>
                           <View style={{textAlign: 'right'}}>
-                            <Text style={{textAlign: 'center'}}>
+                            <Text
+                              style={{
+                                textAlign: 'center',
+                                color: '#07858a',
+                                fontSize: 12,
+                                fontWeight: 400,
+                              }}>
                               {item.created_at}
                             </Text>
                           </View>
@@ -201,7 +232,7 @@ export default function Home() {
                 </ScrollView>
               </View>
             </View>
-          </View>
+          </SafeAreaView>
         </View>
       </ScrollView>
     </NativeBaseProvider>
@@ -216,7 +247,6 @@ const styles = StyleSheet.create({
   section: {
     width: '100%',
     height: '100%',
-    paddingTop: 25,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -241,13 +271,19 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     marginBottom: 18,
     paddingLeft: 30,
+    fontWeight: 'bold',
+    backgroundColor: '#FFB200',
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 15,
+    width: 200,
+    height: 26,
   },
   pop: {
     fontSize: 18,
     fontFamily: 'Airbnb Cereal App',
-    marginTop: 25,
-    marginBottom: 40,
-    paddingHorizontal: 30,
+    paddingTop: 25,
+    paddingBottom: 25,
+    paddingRight: 30,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -258,33 +294,44 @@ const styles = StyleSheet.create({
     fontFamily: 'Airbnb Cereal App',
     textAlign: 'left',
     backgroundColor: '#FFB200',
+    fontWeight: 'bold',
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 15,
+    paddingLeft: 30,
+    width: 200,
+    height: 26,
   },
   seeMore: {
     fontSize: 13,
     fontFamily: 'Airbnb Cereal App',
     textAlign: 'right',
+    fontWeight: 'bold',
   },
   name: {
     width: 70,
     fontSize: 14,
     color: '#FBFBFB',
     position: 'absolute',
-    bottom: 13,
-    left: 10,
-    fontWeight: 'bold',
+    bottom: 20,
+    left: 12,
+    fontWeight: '700',
     shadowColor: 'black',
     fontFamily: 'Airbnb Cereal App',
+    zIndex: 2,
   },
 
   gambar2: {
     flexDirection: 'row',
-    marginBottom: 12,
+    marginBottom: 10,
     width: '100%',
+    height: 80,
     justifyContent: 'space-around',
     paddingLeft: 7,
+    alignItems: 'center',
   },
   text2: {
-    width: 122,
+    width: '50%',
+    justifyContent: 'center',
   },
   icon: {
     fontSize: 12,

@@ -23,6 +23,7 @@
     "react-native-gesture-handler": "^2.13.1",
     "react-native-image-picker": "^7.0.0",
     "react-native-pager-view": "^6.2.1",
+    "react-native-paper": "^5.10.6",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.25.0",
     "react-native-splash-screen": "^3.3.0",

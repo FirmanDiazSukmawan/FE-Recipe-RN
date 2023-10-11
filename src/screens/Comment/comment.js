@@ -9,7 +9,9 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Alert,
   View,
+  Pressable,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -30,6 +32,9 @@ import {
   getCommentRecipeIdSelector,
 } from '../../redux/reducer/comment/getCommentRecipeIdSlice';
 import {TextArea} from 'native-base';
+import {Menu} from 'react-native-paper';
+import Entypo from 'react-native-vector-icons/Entypo';
+import {deleteComment} from '../../redux/reducer/comment/deleteCommentSlice';
 
 export default function Comment() {
   const route = useRoute();
@@ -40,6 +45,7 @@ export default function Comment() {
   console.log(comment);
   const [loading, setLoading] = useState(false);
   const [commen, setCommen] = useState('');
+  const navigation = useNavigation();
 
   console.log(commen);
   // console.log(users);
@@ -85,6 +91,29 @@ export default function Comment() {
     setLoading(false);
   }, [dispatch, recipes_id]);
 
+  const [visible, setVisible] = React.useState(false);
+  const [selectedCommentId, setSelectedCommentId] = React.useState(null);
+
+  const openMenu = comment_id => {
+    setVisible(true);
+    setSelectedCommentId(comment_id);
+  };
+
+  const deleteCommen = async comment_id => {
+    try {
+      await dispatch(deleteComment(comment_id));
+      dispatch(getCommentRecipeId(recipes_id));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleBack = () => {
+    navigation.navigate('DetailRecipe', {recipes_id});
+  };
+
+  const closeMenu = () => setVisible(false);
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -111,6 +140,7 @@ export default function Comment() {
                 left: 10,
                 top: 10,
               }}
+              onPress={handleBack}
             />
             <View style={styles.textInside}>
               <View styles={styles.textLeft}>
@@ -187,7 +217,7 @@ export default function Comment() {
           <View style={{paddingTop: 15}}>
             <Text style={{color: '#666', fontSize: 12}}> Comment :</Text>
           </View>
-          <View>
+          <View style={{width: 350}}>
             {loading ? (
               <Text>Loading....</Text>
             ) : (
@@ -196,7 +226,6 @@ export default function Comment() {
                   style={{
                     paddingVertical: 10,
                     flexDirection: 'row',
-                    paddingLeft: 10,
                   }}
                   key={index}>
                   <View
@@ -205,7 +234,9 @@ export default function Comment() {
                       flexDirection: 'row',
                       backgroundColor: '#e1eded',
                       borderRadius: 15,
-                      paddingLeft: 10,
+                      width: '100%',
+                      justifyContent: 'space-evenly',
+                      marginLeft: -10,
                     }}>
                     <Image
                       source={{
@@ -215,14 +246,39 @@ export default function Comment() {
                     />
                     <View
                       style={{
-                        paddingLeft: 10,
-                        width: 280,
+                        width: '66%',
                         borderRadius: 10,
+                        marginLeft: -10,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                       }}>
-                      <Text style={{color: '#151a1a'}}>{item.creator}</Text>
-                      <Text style={{color: '#596e6e'}}>{item.commen}</Text>
+                      <View
+                        style={{
+                          width: '66%',
+                          borderRadius: 10,
+                          marginLeft: -10,
+                        }}>
+                        <Text style={{color: '#151a1a'}}>{item.creator}</Text>
+                        <Text style={{color: '#596e6e'}}>{item.commen}</Text>
+                      </View>
+                      <Menu
+                        visible={
+                          visible && selectedCommentId === item.comment_id
+                        }
+                        onDismiss={closeMenu}
+                        anchor={
+                          <Pressable onPress={() => openMenu(item.comment_id)}>
+                            <Entypo name="dots-three-vertical" />
+                          </Pressable>
+                        }>
+                        <Menu.Item onPress={() => {}} title="Edit Comment" />
+                        <Menu.Item
+                          onPress={() => deleteCommen(item.comment_id)}
+                          title="Delete Comment"
+                        />
+                      </Menu>
                     </View>
-                    <Text style={{color: '#596e6e'}}>icon</Text>
                   </View>
                 </View>
               ))
@@ -304,7 +360,7 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     flex: 1,
     alignItems: 'center',
-    width: '100%',
+    width: '80%',
     paddingHorizontal: 16, // Menambahkan padding horizontal untuk konten agar rata tengah
   },
 });

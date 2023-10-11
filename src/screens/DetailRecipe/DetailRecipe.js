@@ -15,6 +15,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  RefreshControl,
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import React, {useEffect, useState} from 'react';
@@ -45,9 +46,7 @@ export default function DetailRecipe() {
   const comment = useSelector(getCommentRecipeIdSelector);
   console.log(comment);
   const [loading, setLoading] = useState(false);
-  const [commen, setCommen] = useState('');
-
-  console.log(commen);
+  const [refresh, setRefresh] = useState(false);
   // console.log(users);
 
   const handleLike = async () => {
@@ -86,9 +85,23 @@ export default function DetailRecipe() {
     setLoading(false);
   }, [dispatch, recipes_id]);
 
+  const onRefresh = async () => {
+    setRefresh(true);
+    try {
+      await dispatch(getRecipeId(recipes_id));
+      await dispatch(getCommentRecipeId(recipes_id));
+      setRefresh(false);
+    } catch (error) {
+      console.error('Error Get recipe:', error);
+    }
+  };
+
   const FirstRoute = () => (
     <View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center'}}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+        }>
         {recipe?.data?.map((item, index) => {
           const slicedIngredients = item.ingredients.slice('-');
           return (
@@ -109,14 +122,20 @@ export default function DetailRecipe() {
   };
   const SecondRoute = () => (
     <View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center'}}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+        }>
         <View
           style={{
             width: 319,
-            marginVertical: 10,
+            height: 80,
             backgroundColor: '#FAF7ED',
             borderTopRightRadius: 159.5,
             borderBottomRightRadius: 159.5,
+            justifyContent: 'center',
+            marginTop: 20,
           }}>
           {recipe?.data?.map((item, index) => (
             <View style={{flexDirection: 'row'}} key={index}>
@@ -133,8 +152,10 @@ export default function DetailRecipe() {
                 <Feather name="play" style={{fontSize: 18, color: '#F8F8F8'}} />
               </Pressable>
               <View style={{marginLeft: 30, justifyContent: 'center'}}>
-                <Text style={{color: '#666', fontSize: 16}}>Step 1</Text>
-                <Text style={{color: '#B6B6B6', fontSize: 12}}>
+                <Text style={{color: '#B6B6B6', fontSize: 16, fontWeight: 400}}>
+                  Step 1
+                </Text>
+                <Text style={{color: '#666', fontSize: 12, fontWeight: 500}}>
                   {item.name_video}
                 </Text>
               </View>
@@ -144,10 +165,12 @@ export default function DetailRecipe() {
         <View
           style={{
             width: 319,
-            marginBottom: 10,
+            height: 80,
             backgroundColor: '#FAF7ED',
             borderTopRightRadius: 159.5,
             borderBottomRightRadius: 159.5,
+            justifyContent: 'center',
+            marginTop: 20,
           }}>
           <View style={{flexDirection: 'row'}}>
             <View
@@ -161,10 +184,12 @@ export default function DetailRecipe() {
               }}>
               <Feather name="play" style={{fontSize: 18, color: '#F8F8F8'}} />
             </View>
-            <View style={{marginLeft: 30, justifyContent: 'center'}}>
-              <Text style={{color: '#666', fontSize: 16}}>Step 2</Text>
-              <Text style={{color: '#B6B6B6', fontSize: 12}}>
-                Boil eggs for 3 minutes
+            <View style={{paddingLeft: 30, justifyContent: 'center'}}>
+              <Text style={{color: '#B6B6B6', fontSize: 16, fontWeight: 400}}>
+                Step 2
+              </Text>
+              <Text style={{color: '#666', fontSize: 12, fontWeight: 500}}>
+                Prepare the bread, then spread ...
               </Text>
             </View>
           </View>
@@ -172,10 +197,12 @@ export default function DetailRecipe() {
         <View
           style={{
             width: 319,
-            marginBottom: 10,
+            height: 80,
             backgroundColor: '#FAF7ED',
             borderTopRightRadius: 159.5,
             borderBottomRightRadius: 159.5,
+            justifyContent: 'center',
+            marginTop: 20,
           }}>
           <View style={{flexDirection: 'row'}}>
             <View
@@ -189,21 +216,70 @@ export default function DetailRecipe() {
               }}>
               <Feather name="play" style={{fontSize: 18, color: '#F8F8F8'}} />
             </View>
-            <View style={{marginLeft: 30, justifyContent: 'center'}}>
-              <Text style={{color: '#666', fontSize: 16}}>Step 3</Text>
-              <Text style={{color: '#B6B6B6', fontSize: 12}}>
-                Boil eggs for 3 minutes
+            <View style={{paddingLeft: 30, justifyContent: 'center'}}>
+              <Text style={{color: '#B6B6B6', fontSize: 16, fontWeight: 400}}>
+                Step 3
+              </Text>
+              <Text style={{color: '#666', fontSize: 12, fontWeight: 500}}>
+                Roast beef at medium temperature
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            width: 319,
+            height: 80,
+            marginTop: 20,
+            backgroundColor: '#FAF7ED',
+            borderTopRightRadius: 159.5,
+            borderBottomRightRadius: 159.5,
+            justifyContent: 'center',
+          }}>
+          <View style={{flexDirection: 'row'}}>
+            <View
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: 16,
+                backgroundColor: '#EEC302',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Feather name="play" style={{fontSize: 18, color: '#F8F8F8'}} />
+            </View>
+            <View style={{paddingLeft: 30, justifyContent: 'center'}}>
+              <Text style={{color: '#B6B6B6', fontSize: 16, fontWeight: 400}}>
+                Step 4
+              </Text>
+              <Text style={{color: '#666', fontSize: 12, fontWeight: 500}}>
+                spicy, salted
               </Text>
             </View>
           </View>
         </View>
 
-        <View style={{paddingTop: 15}}>
-          <Button
-            title="Post Comment"
-            onPress={() => handleComment(recipes_id)}
-            color="#EFC81A"
-          />
+        <View
+          style={{
+            paddingTop: 15,
+            width: '100%',
+            alignItems: 'center',
+          }}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#EFC81A',
+              borderRadius: 10,
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              width: 319,
+              height: 50,
+              justifyContent: 'center',
+            }}
+            onPress={() => handleComment(recipes_id)}>
+            <Text style={{color: 'white', textAlign: 'center'}}>
+              Post Comment
+            </Text>
+          </TouchableOpacity>
         </View>
         <View style={{paddingTop: 15}}>
           <Text style={{color: '#666', fontSize: 12}}> Comment :</Text>
@@ -225,7 +301,7 @@ export default function DetailRecipe() {
                     paddingVertical: 10,
                     flexDirection: 'row',
                     backgroundColor: '#e1eded',
-                    borderRadius: 15,
+                    borderRadius: 13,
                     width: 320,
                     paddingLeft: 10,
                   }}>
@@ -276,11 +352,12 @@ export default function DetailRecipe() {
       ) : (
         recipe?.data?.map((item, i) => (
           <View style={styles.top} key={i}>
+            <View style={styles.bgcolor} />
             <Image
               source={{uri: item.image}}
               style={{
                 width: '100%',
-                height: 300,
+                height: 462,
                 position: 'relative',
                 objectFit: 'fill',
               }}
@@ -295,12 +372,13 @@ export default function DetailRecipe() {
                 position: 'absolute',
                 left: 10,
                 top: 10,
+                zIndex: 2,
               }}
             />
             <View style={styles.textInside}>
               <View styles={styles.textLeft}>
                 <Text style={styles.textDesc}>{item.name_recipes}</Text>
-                <Text style={styles.textBy}>{item.creator}</Text>
+                <Text style={styles.textBy}>By Chef {item.creator}</Text>
               </View>
               <View style={styles.iconRight}>
                 <TouchableOpacity style={styles.icon1} onPress={handleSaved}>
@@ -323,10 +401,11 @@ export default function DetailRecipe() {
       <View
         style={{
           width: '100%',
-          height: '62%',
+          height: '47%',
           backgroundColor: '#FFF',
-          marginTop: -30,
+          marginTop: -60,
           borderRadius: 15,
+          zIndex: 2,
         }}>
         <TabView
           animationEnabled={false}
@@ -336,13 +415,14 @@ export default function DetailRecipe() {
           renderScene={renderScene}
           onIndexChange={setIndex}
           initialLayout={{width: layout.width}}
+          style={{flex: 1}}
           renderTabBar={props => {
             return (
               <TabBar
                 {...props}
                 style={{backgroundColor: 'transparent'}}
                 labelStyle={{color: '#666', fontSize: 16}}
-                indicatorStyle={{backgroundColor: 'blue'}}
+                indicatorStyle={{backgroundColor: '#EEC302'}}
               />
             );
           }}
@@ -359,27 +439,30 @@ const styles = StyleSheet.create({
   },
   top: {
     width: '100%',
-    height: 300,
+    height: 462,
     position: 'relative',
     borderRadius: 10,
   },
   textInside: {
     position: 'absolute',
-    bottom: 50,
+    bottom: 70,
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
     paddingHorizontal: 28,
     alignItems: 'center',
+    zIndex: 2,
   },
   textDesc: {
     width: 149,
-    color: 'white',
+    color: '#FBFBFB',
     fontSize: 32,
+    fontWeight: '700',
   },
   textBy: {
-    color: 'brown',
+    color: '#B0B0B0',
     fontSize: 12,
+    fontWeight: '400',
   },
   textLeft: {
     width: 149,
@@ -417,5 +500,12 @@ const styles = StyleSheet.create({
     height: 150,
     justifyContent: 'flex-start',
     width: 319,
+  },
+  bgcolor: {
+    width: '100%',
+    height: '100%',
+    zIndex: 1,
+    position: 'absolute',
+    backgroundColor: 'rgba(80, 84, 83, 0.1)',
   },
 });

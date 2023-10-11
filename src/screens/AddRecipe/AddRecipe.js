@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -88,6 +89,8 @@ export default function AddRecipe() {
     maxWidth: 800,
     maxHeight: 800,
     quality: 0.8,
+    includeBase64: false,
+    saveToPhotos: true,
   };
 
   const handleOpenCamera = async () => {
@@ -102,6 +105,67 @@ export default function AddRecipe() {
       }
     } catch (error) {
       console.error('Error saat membuka kamera:', error);
+    }
+  };
+
+  const RequestPermissionsImage = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'APP Camera Permissions',
+          message: 'App Need Camera',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+          buttonNeutral: 'Ask Me Later',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('access successfully granted');
+        handleOpenCamera();
+      } else {
+        console.log('access failure');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const RequestPermissionsVideo = async () => {
+    try {
+      const cameraGranted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'App Camera Permissions',
+          message: 'App Needs Camera Access',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+          buttonNeutral: 'Ask Me Later',
+        },
+      );
+
+      const audioGranted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        {
+          title: 'App Audio Permissions',
+          message: 'App Needs Audio Access',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+          buttonNeutral: 'Ask Me Later',
+        },
+      );
+
+      if (
+        cameraGranted === PermissionsAndroid.RESULTS.GRANTED &&
+        audioGranted === PermissionsAndroid.RESULTS.GRANTED
+      ) {
+        console.log('Access to camera and audio successfully granted');
+        handleOpenCamVideo();
+      } else {
+        console.log('Access denied for camera and/or audio');
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -120,8 +184,9 @@ export default function AddRecipe() {
 
   const optionsVideo = {
     mediaType: 'video',
-    videoQuality: 'high',
+    videoQuality: 'low',
     durationLimit: 300,
+    includeBase64: false,
     saveToPhotos: true,
   };
 
@@ -130,6 +195,7 @@ export default function AddRecipe() {
       const result = await launchCamera(optionsVideo);
       if (!result.didCancel) {
         const uri = result.assets[0];
+        console.log(uri);
         setSelectedVideo(uri);
         console.log('Video dari kamera:', uri);
       } else {
@@ -156,7 +222,7 @@ export default function AddRecipe() {
 
   useEffect(() => {
     if (isFocused) {
-      resetPage(); // Fungsi resetPage akan dijelaskan di bawah
+      resetPage();
     }
   }, [isFocused]);
 
@@ -208,7 +274,7 @@ export default function AddRecipe() {
         />
         <View style={{flexDirection: 'row', marginVertical: 10}}>
           <TouchableOpacity
-            onPress={handleOpenCamera}
+            onPress={RequestPermissionsImage}
             style={{marginRight: 10}}>
             <Feather name="camera" style={{fontSize: 25, color: 'brown'}} />
           </TouchableOpacity>
@@ -280,7 +346,7 @@ export default function AddRecipe() {
             />
             <View style={{flexDirection: 'row', marginVertical: 10}}>
               <TouchableOpacity
-                onPress={handleOpenCamVideo}
+                onPress={RequestPermissionsVideo}
                 style={{marginRight: 10}}>
                 <Feather name="video" style={{fontSize: 25, color: 'brown'}} />
               </TouchableOpacity>

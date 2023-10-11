@@ -11,6 +11,7 @@ import createLikedSlice from './reducer/liked/createLikedSlice';
 import getSavedUserIdSlice from './reducer/saved/getSavedUserIdSlice';
 import createCommentSlice from './reducer/comment/createCommentSlice';
 import getCommentRecipeIdSlice from './reducer/comment/getCommentRecipeIdSlice';
+import deleteCommentSlice from './reducer/comment/deleteCommentSlice';
 
 export const store = configureStore({
   reducer: {
@@ -25,5 +26,6 @@ export const store = configureStore({
     getSavedUserId: getSavedUserIdSlice,
     createComment: createCommentSlice,
     getCommentRecipeId: getCommentRecipeIdSlice,
+    deleteComment: deleteCommentSlice,
   },
 });
