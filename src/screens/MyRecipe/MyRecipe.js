@@ -36,7 +36,7 @@ export default function MyRecipe() {
   useEffect(() => {
     dispatch(getRecipeByUsersId(users_id));
     setLoading(false);
-    setRefresh(false);
+    onRefresh();
   }, [dispatch, users_id]);
 
   const onRefresh = () => {
@@ -100,7 +100,9 @@ export default function MyRecipe() {
                   <Text style={styles.text2}>{item.created_at}</Text>
                 </View>
                 <View style={{flexDirection: 'row', textAlign: 'right'}}>
-                  <TouchableOpacity onPress={() => EditRecipe(item.recipes_id)}>
+                  <TouchableOpacity
+                    onPress={() => EditRecipe(item.recipes_id)}
+                    style={{paddingRight: 5}}>
                     <FontAwesome style={styles.icon1} name="edit" />
                   </TouchableOpacity>
                   <Text>

@@ -1,8 +1,16 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import {Alert, Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect} from 'react';
-import img4 from '../../assets/image4.png';
+import {
+  Alert,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
@@ -12,10 +20,11 @@ import {
   getUsersId,
   getUsersIdSelector,
 } from '../../redux/reducer/users/getUserbyIdSlice';
+import iconRecipe from '../../assets/imageIcon.png';
 
 export default function Profile() {
   const navigation = useNavigation();
-
+  const [refresh, setRefresh] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector(getUsersIdSelector);
   const users = user?.data;
@@ -30,6 +39,18 @@ export default function Profile() {
       });
   }, [dispatch]);
   // console.log(users);
+  const onRefresh = async () => {
+    setRefresh(true);
+
+    try {
+      const users_id = await AsyncStorage.getItem('users_id');
+      await dispatch(getUsersId(users_id));
+      setRefresh(false);
+    } catch (err) {
+      console.log(err);
+      setRefresh(false);
+    }
+  };
 
   const MyRecipe = users_id => {
     navigation.navigate('MyRecipe', {users_id});
@@ -54,9 +75,17 @@ export default function Profile() {
     }
   };
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+      }>
       <View style={styles.top}>
         <View style={styles.topProfile}>
+          <Image
+            source={iconRecipe}
+            style={{width: 70, height: 70, position: 'absolute', top: 0}}
+          />
           <Image
             source={{uri: users?.image}}
             style={{width: 84, height: 84, borderRadius: 42}}
@@ -171,7 +200,7 @@ export default function Profile() {
           </Pressable>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -179,12 +208,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    alignItems: 'center',
+    height: '100%',
   },
   top: {
     width: '100%',
     height: '40%',
     backgroundColor: '#EEC302',
+    alignItems: 'center',
   },
   topProfile: {
     width: '100%',
@@ -193,13 +223,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   botProfile: {
-    width: '97%',
-    height: '68%',
+    width: '100%',
+    height: '60%',
     backgroundColor: '#fff',
     paddingHorizontal: 25,
     borderTopStartRadius: 30,
     borderTopEndRadius: 30,
-    marginTop: -35,
   },
   objectBotProfile: {
     marginBottom: 30,

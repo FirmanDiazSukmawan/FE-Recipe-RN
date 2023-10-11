@@ -184,8 +184,6 @@ export default function AddRecipe() {
 
   const optionsVideo = {
     mediaType: 'video',
-    videoQuality: 'low',
-    durationLimit: 300,
     includeBase64: false,
     saveToPhotos: true,
   };
@@ -193,13 +191,14 @@ export default function AddRecipe() {
   const handleOpenCamVideo = async () => {
     try {
       const result = await launchCamera(optionsVideo);
+      console.log(result);
       if (!result.didCancel) {
         const uri = result.assets[0];
         console.log(uri);
         setSelectedVideo(uri);
         console.log('Video dari kamera:', uri);
       } else {
-        console.log('menolak open kamera');
+        console.log('user menolak open kamera');
       }
     } catch (error) {
       console.error('Error saat membuka kamera:', error);
@@ -218,7 +217,7 @@ export default function AddRecipe() {
       console.error('Error saat membuka galeri:', error);
     }
   };
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
     if (isFocused) {

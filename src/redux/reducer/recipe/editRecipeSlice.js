@@ -32,7 +32,7 @@ export const updateRecipe = createAsyncThunk(
           },
         },
       );
-      console.log(response);
+      return response?.data;
     } catch (err) {
       Alert.alert('Error create Recipe');
       console.log(err);

@@ -383,13 +383,13 @@ export default function DetailRecipe() {
               <View style={styles.iconRight}>
                 <TouchableOpacity style={styles.icon1} onPress={handleSaved}>
                   <Ionicons
-                    style={{fontSize: 36, color: '#E9E9E8'}}
+                    style={{fontSize: 26, color: '#E9E9E8'}}
                     name="bookmark-outline"
                   />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.icon2} onPress={handleLike}>
                   <AntDesign
-                    style={{fontSize: 36, color: '#EFC81A'}}
+                    style={{fontSize: 26, color: '#EFC81A'}}
                     name="like2"
                   />
                 </TouchableOpacity>
@@ -460,9 +460,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   textBy: {
-    color: '#B0B0B0',
+    color: '#07858a',
     fontSize: 12,
     fontWeight: '400',
+    paddingLeft: 2,
   },
   textLeft: {
     width: 149,
@@ -471,8 +472,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   icon1: {
-    width: 50,
-    height: 50,
+    width: 36,
+    height: 36,
     marginRight: 10,
     backgroundColor: '#EFC81A',
     borderRadius: 25,
@@ -480,8 +481,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon2: {
-    width: 50,
-    height: 50,
+    width: 36,
+    height: 36,
     backgroundColor: '#fff',
     borderRadius: 25,
     justifyContent: 'center',
@@ -506,6 +507,6 @@ const styles = StyleSheet.create({
     height: '100%',
     zIndex: 1,
     position: 'absolute',
-    backgroundColor: 'rgba(80, 84, 83, 0.1)',
+    backgroundColor: 'rgba(80, 84, 83, 0.3)',
   },
 });

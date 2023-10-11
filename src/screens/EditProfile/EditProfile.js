@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -88,6 +89,8 @@ export default function EditProfile() {
     maxWidth: 800,
     maxHeight: 800,
     quality: 0.8,
+    includeBase64: false,
+    saveToPhotos: true,
   };
 
   const handleOpenCamera = async () => {
@@ -96,12 +99,35 @@ export default function EditProfile() {
       if (!result.didCancel) {
         const uri = result.assets[0];
         setSelectedImage(uri);
-        // console.log('Gambar dari kamera:', uri);
+        console.log('Gambar dari kamera:', uri);
       } else {
         console.log('menolak open kamera');
       }
     } catch (error) {
       console.error('Error saat membuka kamera:', error);
+    }
+  };
+
+  const RequestPermissionsImage = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'APP Camera Permissions',
+          message: 'App Need Camera',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+          buttonNeutral: 'Ask Me Later',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('access successfully granted');
+        handleOpenCamera();
+      } else {
+        console.log('access failure');
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -140,7 +166,7 @@ export default function EditProfile() {
         />
         <View style={{flexDirection: 'row', marginVertical: 20}}>
           <TouchableOpacity
-            onPress={handleOpenCamera}
+            onPress={RequestPermissionsImage}
             style={{marginRight: 10}}>
             <Feather name="camera" style={{fontSize: 25, color: 'brown'}} />
           </TouchableOpacity>
