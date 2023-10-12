@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 import {
   FlatList,
@@ -16,6 +17,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import {API_RECIPE} from '@env';
 import {useNavigation} from '@react-navigation/native';
+
+function EmptyListComponent() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text style={{fontSize: 18}}>Not Found Data</Text>
+    </View>
+  );
+}
 
 export default function Search() {
   const numcolumns = 3;
@@ -115,6 +124,7 @@ export default function Search() {
                 </TouchableOpacity>
               );
             }}
+            ListEmptyComponent={EmptyListComponent}
           />
         </View>
         {/* </ScrollView> */}
