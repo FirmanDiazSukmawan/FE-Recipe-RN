@@ -4926,7 +4926,7 @@ intl-messageformat@^10.1.0:
     "@formatjs/icu-messageformat-parser" "2.6.2"
     tslib "^2.4.0"
 
-invariant@*, invariant@^2.2.4:
+invariant@*, invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.npmjs.org/invariant/-/invariant-2.2.4.tgz"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -6911,6 +6911,13 @@ react-native-image-picker@^7.0.0:
   version "7.0.0"
   resolved "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-7.0.0.tgz"
   integrity sha512-eiDj0mJUPivranQJX/pwkGf/Ar9QrQ+BF3y0D8frHU3S7U86IGOnOzHN7Wh6ofXEnafRij0TpmRCdrSebBMV+Q==
+
+react-native-onesignal@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.npmjs.org/react-native-onesignal/-/react-native-onesignal-5.0.2.tgz"
+  integrity sha512-8CsEQRRwoiNX6JhW0FWbCgkKz5OrsgtmW2BLmOkg7TwNA9Fge2obMda3DSeZniZVDFs6viz6DXkgtZnJjdgNvg==
+  dependencies:
+    invariant "^2.2.2"
 
 react-native-pager-view@*, react-native-pager-view@^6.2.1:
   version "6.2.1"

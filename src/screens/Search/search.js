@@ -94,7 +94,7 @@ export default function Search() {
           />
         </VStack>
         {/* <ScrollView> */}
-        <View style={{height: '100%'}}>
+        <View style={{height: '91%'}}>
           <FlatList
             // nestedScrollEnabled
             refreshControl={

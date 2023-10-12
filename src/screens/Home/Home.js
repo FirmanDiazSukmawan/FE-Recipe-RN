@@ -29,8 +29,26 @@ import {
   getRecipeLimit,
   getRecipeLimitSelector,
 } from '../../redux/reducer/recipe/getRecipeLimitSlice';
+import {LogLevel, OneSignal} from 'react-native-onesignal';
 
 export default function Home() {
+  // ONE SIGNAL NOTIFICATION
+  // Remove this method to stop OneSignal Debugging
+  OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+
+  // OneSignal Initialization
+  OneSignal.initialize('ebce66d1-80d2-4348-8492-8cdcc37b6972');
+
+  // requestPermission will show the native iOS or Android notification permission prompt.
+  // We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+  OneSignal.Notifications.requestPermission(true);
+
+  // Method for listening for notification clicks
+  OneSignal.Notifications.addEventListener('click', event => {
+    console.log('OneSignal: notification clicked:', event);
+  });
+  // END ONE SIGNAL NOTIFICATION
+
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const getRecipes = useSelector(getRecipeSelector);

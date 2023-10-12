@@ -109,7 +109,13 @@ export default function DetailRecipe() {
   };
 
   const FirstRoute = () => (
-    <View style={{flex: 1, backgroundColor: '#fff', alignItems: 'center'}}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
@@ -117,7 +123,11 @@ export default function DetailRecipe() {
         {recipe?.data?.map((item, index) => {
           const slicedIngredients = item.ingredients.slice('-');
           return (
-            <View style={{width: 319}} key={index}>
+            <View
+              style={{
+                width: 319,
+              }}
+              key={index}>
               <Text style={{textAlign: 'left', width: '100%'}}>
                 - {slicedIngredients}
               </Text>

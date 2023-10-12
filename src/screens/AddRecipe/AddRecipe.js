@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Feather from 'react-native-vector-icons/Feather';
@@ -334,7 +334,7 @@ export default function AddRecipe() {
               InputLeftElement={
                 <Icon as={<Feather name="book-open" />} size={5} ml="2" />
               }
-              placeholder="Tittle"
+              placeholder="Tittle Recipes"
               value={data.name_recipes}
               onChangeText={name_recipes}
             />
@@ -362,9 +362,13 @@ export default function AddRecipe() {
               borderRadius="10"
               bgColor="#F5F5F5"
               InputLeftElement={
-                <Icon as={<Feather name="list" />} size={5} ml="2" />
+                <Icon
+                  as={<MaterialIcons name="short-text" />}
+                  size={5}
+                  ml="2"
+                />
               }
-              placeholder="nameVideo"
+              placeholder="Tittle Video"
               value={data.name_video}
               onChangeText={name_video}
             />
