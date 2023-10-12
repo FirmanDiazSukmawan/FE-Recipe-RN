@@ -15,7 +15,14 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Feather from 'react-native-vector-icons/Feather';
-import {Icon, Input, NativeBaseProvider, Stack, Button} from 'native-base';
+import {
+  Icon,
+  Input,
+  NativeBaseProvider,
+  Stack,
+  Button,
+  useToast,
+} from 'native-base';
 import Video from 'react-native-video';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -32,6 +39,9 @@ export default function EditRecipe() {
   const route = useRoute();
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [imageSelected, setImageSelected] = useState(false);
+  const [videoSelected, setVideoSelected] = useState(false);
+  const toast = useToast();
   const {recipes_id} = route.params;
   const recipe = useSelector(getRecipeIdSelector);
   const recipes = recipe?.data?.[0];
@@ -100,12 +110,17 @@ export default function EditRecipe() {
     try {
       dispatch(updateRecipe({recipes_id, data, selectedImage, selectedVideo}));
       setLoading(true);
-      Alert.alert('update Recipe Succesfully');
+      toast.show({
+        description: 'Edit Recipe Successfully',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
       setTimeout(() => {
         setLoading(false);
       }, 2000);
     } catch (err) {
-      console.log(err);
+      Alert.alert(err.respone.data.message);
     }
   };
 
@@ -128,6 +143,7 @@ export default function EditRecipe() {
       if (!result.didCancel) {
         const uri = result.assets[0];
         setSelectedImage(uri);
+        setImageSelected(true);
         console.log('Gambar dari kamera:', uri);
       } else {
         console.log('menolak open kamera');
@@ -204,6 +220,7 @@ export default function EditRecipe() {
       if (!result.didCancel) {
         const uri = result.assets[0];
         setSelectedImage(uri);
+        setImageSelected(true);
         console.log('Image dari galeri:', uri);
       }
     } catch (error) {
@@ -225,6 +242,7 @@ export default function EditRecipe() {
         const uri = result.assets[0];
         console.log(uri);
         setSelectedVideo(uri);
+        setVideoSelected(true);
         console.log('Video dari kamera:', uri);
       } else {
         console.log('user menolak open kamera');
@@ -240,6 +258,7 @@ export default function EditRecipe() {
       if (!result.didCancel) {
         const uri = result.assets[0];
         setSelectedVideo(uri);
+        setVideoSelected(true);
         console.log('Video dari galeri:', uri);
       }
     } catch (error) {
@@ -384,7 +403,10 @@ export default function EditRecipe() {
               </TouchableOpacity>
             </View>
           </View>
-          <Button style={styles.submit} onPress={handelEditRecipe}>
+          <Button
+            style={styles.submit}
+            onPress={handelEditRecipe}
+            isDisabled={!imageSelected || !videoSelected}>
             Add Recipe
           </Button>
         </NativeBaseProvider>

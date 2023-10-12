@@ -10,7 +10,7 @@ export const getRecipeLimit = createAsyncThunk(
       const response = await axios.get(
         `${API_RECIPE}/recipe/?limit=5&sort=DESC`,
       );
-    //   console.log(response.data);
+      //   console.log(response.data);
       return response.data;
     } catch (err) {
       console.log(err);

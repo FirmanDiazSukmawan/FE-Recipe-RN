@@ -8,7 +8,7 @@ export const getLikedUsersId = createAsyncThunk(
   async users_id => {
     try {
       const response = await axios.get(`${API_RECIPE}/liked/users/${users_id}`);
-    //   console.log(response.data);
+      //   console.log(response.data);
       return response.data;
     } catch (err) {
       console.log(err);

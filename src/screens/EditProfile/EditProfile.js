@@ -15,7 +15,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Feather from 'react-native-vector-icons/Feather';
-import {Icon, Input, NativeBaseProvider, Stack, Button} from 'native-base';
+import {
+  Icon,
+  Input,
+  NativeBaseProvider,
+  Stack,
+  Button,
+  useToast,
+} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUsersIdSelector} from '../../redux/reducer/users/getUserbyIdSlice';
 import {updateUsers} from '../../redux/reducer/users/updateUser';
@@ -24,9 +31,11 @@ export default function EditProfile() {
   const navigation = useNavigation();
   const route = useRoute();
   const [selectedImage, setSelectedImage] = useState(null);
+  const [imageSelected, setImageSelected] = useState(false);
   const {users_id} = route.params;
   const dispatch = useDispatch();
   const user = useSelector(getUsersIdSelector);
+  const toast = useToast();
   console.log(user);
   // console.log(users_id);
   const back = () => {
@@ -75,12 +84,16 @@ export default function EditProfile() {
   const handleSubmit = () => {
     dispatch(updateUsers({users_id, data, selectedImage}))
       .then(res => {
-        Alert.alert('Edit profile successfully');
+        toast.show({
+          description: 'Edit Profile Succesfuly',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
         console.log(res);
       })
       .catch(error => {
-        Alert.alert('Edit profile failed');
-        console.log(error);
+        Alert.alert(error.response.data.message);
       });
   };
 
@@ -99,12 +112,26 @@ export default function EditProfile() {
       if (!result.didCancel) {
         const uri = result.assets[0];
         setSelectedImage(uri);
+        setImageSelected(true);
         console.log('Gambar dari kamera:', uri);
       } else {
-        console.log('menolak open kamera');
+        toast.show({
+          description: 'you reject opening camera',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          type: 'danger',
+        });
       }
     } catch (error) {
-      console.error('Error saat membuka kamera:', error);
+      toast.show({
+        description: 'Error saat membuka kamera:',
+        error,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        type: 'danger',
+      });
     }
   };
 
@@ -138,6 +165,7 @@ export default function EditProfile() {
       if (!result.didCancel) {
         const uri = result.assets[0];
         setSelectedImage(uri);
+        setImageSelected(true);
         // console.log('Image dari galeri:', result);
       }
     } catch (error) {
@@ -208,7 +236,10 @@ export default function EditProfile() {
               onChangeText={handlePhoneNumber}
             />
           </Stack>
-          <Button style={styles.submit} onPress={handleSubmit}>
+          <Button
+            style={styles.submit}
+            onPress={handleSubmit}
+            isDisabled={!imageSelected}>
             Edit Profile
           </Button>
         </NativeBaseProvider>

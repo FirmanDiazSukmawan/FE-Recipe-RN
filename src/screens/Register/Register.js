@@ -2,7 +2,7 @@
 import {Alert, StyleSheet, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Input,
   Icon,
@@ -10,6 +10,7 @@ import {
   Pressable,
   NativeBaseProvider,
   Button,
+  useToast,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
@@ -22,7 +23,9 @@ export default function Register() {
   const [phone_number, setphone_number] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setconfirmPassword] = useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const navigation = useNavigation();
+  const toast = useToast();
 
   const register = async () => {
     try {
@@ -33,14 +36,26 @@ export default function Register() {
         password: password,
         confirmPassword: confirmPassword,
       });
-      Alert.alert('register success');
+      toast.show({
+        description: 'Register Successfully',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
       navigation.navigate('Login');
       console.log(res);
     } catch (err) {
-      Alert.alert('register failed');
-      console.log(err);
+      Alert.alert(err.response.data.message);
     }
   };
+
+  useEffect(() => {
+    if (username && email && phone_number && password && confirmPassword) {
+      setIsButtonDisabled(false);
+    } else {
+      setIsButtonDisabled(true);
+    }
+  }, [username, email, phone_number, password, confirmPassword]);
 
   const Login = () => {
     navigation.navigate('Login');
@@ -147,7 +162,8 @@ export default function Register() {
               h="50"
               borderRadius="10"
               bgColor="#EFC81A"
-              onPress={register}>
+              onPress={register}
+              isDisabled={isButtonDisabled}>
               <Text style={styles.create}>Create account</Text>
             </Button>
             <Text style={styles.already}>

@@ -4,10 +4,10 @@ import {API_RECIPE} from '@env';
 import axios from 'axios';
 import {Alert} from 'react-native';
 
+
 export const updateRecipe = createAsyncThunk(
   'recipe/updateRecipe',
   async ({recipes_id, data, selectedImage, selectedVideo}) => {
-    // console.log(recipes_id);
     const formdataTosend = new FormData();
     formdataTosend.append('name_recipes', data?.name_recipes);
     formdataTosend.append('image', {
@@ -34,8 +34,7 @@ export const updateRecipe = createAsyncThunk(
       );
       return response?.data;
     } catch (err) {
-      Alert.alert('Error create Recipe');
-      console.log(err);
+      Alert.alert(err.response.data.message);
     }
   },
 );

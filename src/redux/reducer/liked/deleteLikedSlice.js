@@ -2,6 +2,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {API_RECIPE} from '@env';
 import axios from 'axios';
+import Alert from 'react-native';
 
 export const deleteLiked = createAsyncThunk(
   'liked/deleteLiked',
@@ -11,7 +12,7 @@ export const deleteLiked = createAsyncThunk(
       // console.log(response.data);
       return response.data;
     } catch (err) {
-      console.log(err);
+      Alert.alert(err.response.data.message);
     }
   },
 );

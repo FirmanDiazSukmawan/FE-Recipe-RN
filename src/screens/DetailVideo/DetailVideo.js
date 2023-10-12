@@ -32,6 +32,8 @@ export default function DetailVideo() {
             controls={true}
             resizeMode="cover"
             autoPlay={false}
+            paused={true}
+            fullscreen={false}
           />
           <Ionicons
             onPress={back}

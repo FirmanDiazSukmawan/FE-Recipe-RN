@@ -8,7 +8,7 @@ export const getRecipeId = createAsyncThunk(
   async recipe_id => {
     try {
       const response = await axios.get(`${API_RECIPE}/recipe/${recipe_id}`);
-    //   console.log(response.data);
+      //   console.log(response.data);
       return response.data;
     } catch (err) {
       console.log(err);

@@ -2,6 +2,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {API_RECIPE} from '@env';
 import axios from 'axios';
+import {Alert} from 'react-native';
 
 export const createLiked = createAsyncThunk(
   'liked/createLiked',
@@ -11,10 +12,9 @@ export const createLiked = createAsyncThunk(
         users_id: users_id,
         recipes_id: recipes_id,
       });
-    //   console.log(response.data);
       return response.data;
     } catch (err) {
-      console.log(err);
+      Alert.alert(err.response.data.message);
     }
   },
 );

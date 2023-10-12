@@ -7,23 +7,22 @@ import {Alert} from 'react-native';
 export const createRecipe = createAsyncThunk(
   'recipe/createRecipe',
   async ({users_id, data, selectedImage, selectedVideo}) => {
-    // console.log(users_id);
-    const formdataTosend = new FormData();
-    formdataTosend.append('name_recipes', data.name_recipes);
-    formdataTosend.append('image', {
-      name: selectedImage?.fileName,
-      type: selectedImage?.type,
-      uri: selectedImage?.uri,
-    });
-    formdataTosend.append('ingredients', data.ingredients);
-    formdataTosend.append('video', {
-      name: selectedVideo?.fileName,
-      type: selectedVideo?.type,
-      uri: selectedVideo?.uri,
-    });
-    formdataTosend.append('name_video', data.name_video);
-    formdataTosend.append('users_id', users_id);
     try {
+      const formdataTosend = new FormData();
+      formdataTosend.append('name_recipes', data.name_recipes);
+      formdataTosend.append('image', {
+        name: selectedImage?.fileName,
+        type: selectedImage?.type,
+        uri: selectedImage?.uri,
+      });
+      formdataTosend.append('ingredients', data.ingredients);
+      formdataTosend.append('video', {
+        name: selectedVideo?.fileName,
+        type: selectedVideo?.type,
+        uri: selectedVideo?.uri,
+      });
+      formdataTosend.append('name_video', data.name_video);
+      formdataTosend.append('users_id', users_id);
       const response = await axios.post(
         `${API_RECIPE}/recipe/`,
         formdataTosend,
@@ -33,10 +32,9 @@ export const createRecipe = createAsyncThunk(
           },
         },
       );
-      console.log(response);
-    } catch (err) {
-      Alert.alert('Error create Recipe');
-      console.log(err);
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   },
 );
@@ -60,7 +58,7 @@ export const createRecipeSlice = createSlice({
       })
       .addCase(createRecipe.rejected, (state, action) => {
         state.loading = false;
-        state.recipe = action?.payload;
+        state.recipe = action?.error;
       });
   },
 });

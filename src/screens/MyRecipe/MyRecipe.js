@@ -23,6 +23,7 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import EditProfile from '../EditProfile/EditProfile';
 import {deleteRecipe} from '../../redux/reducer/recipe/deleteRecipeSlice';
+import {useToast} from 'native-base';
 
 export default function MyRecipe() {
   const navigation = useNavigation();
@@ -32,17 +33,21 @@ export default function MyRecipe() {
   const recipeUsers = useSelector(getRecipeByUsersIdSelector);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     dispatch(getRecipeByUsersId(users_id));
     setLoading(false);
-    onRefresh();
+    setRefresh(false);
   }, [dispatch, users_id]);
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefresh(true);
-    if (dispatch(getRecipeByUsersId(users_id))) {
+    try {
+      await dispatch(getRecipeByUsersId(users_id));
       setRefresh(false);
+    } catch (error) {
+      console.error('Error Get recipe:', error);
     }
   };
   const detailRecipe = recipes_id => {
@@ -56,11 +61,14 @@ export default function MyRecipe() {
   const handleDelete = recipes_id => {
     try {
       dispatch(deleteRecipe(recipes_id));
-      Alert.alert('deleted successfully');
+      toast.show({
+        description: 'you deleted that recipe',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
       onRefresh();
-    } catch {
-      Alert.alert('failed');
-    }
+    } catch {}
   };
 
   const back = () => {
@@ -147,7 +155,7 @@ const styles = StyleSheet.create({
   },
   section: {
     width: '100%',
-    height: '100%',
+    height: '95%',
     paddingTop: 30,
   },
   gambar2: {

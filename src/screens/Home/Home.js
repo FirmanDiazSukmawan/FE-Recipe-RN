@@ -62,12 +62,15 @@ export default function Home() {
     }
   };
 
-  console.log(getRecipesLimit.data);
+  // console.log(getRecipesLimit?.data);
   const detailRecipe = recipes_id => {
     navigation.navigate('DetailRecipe', {recipes_id});
   };
   const detailPopular = () => {
     navigation.navigate('DetailPopular');
+  };
+  const search = () => {
+    navigation.navigate('Search');
   };
   return (
     <NativeBaseProvider>
@@ -86,6 +89,7 @@ export default function Home() {
               style={{paddingHorizontal: 30, paddingVertical: 10}}>
               <Input
                 placeholder="Search Pasta, Bread, etc"
+                onPressIn={search}
                 variant="filled"
                 width="100%"
                 height="50"
@@ -111,7 +115,7 @@ export default function Home() {
                   {loading ? (
                     <Text>Loading...</Text>
                   ) : (
-                    getRecipes.data?.map((item, index) => (
+                    getRecipes?.data?.map((item, index) => (
                       <View style={styles.gambar} key={index}>
                         <Pressable
                           style={styles.gambar1}
@@ -254,10 +258,10 @@ const styles = StyleSheet.create({
   gambar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingLeft: 10,
   },
 
   gambar1: {
-    marginRight: 10,
     alignContent: 'center',
   },
 

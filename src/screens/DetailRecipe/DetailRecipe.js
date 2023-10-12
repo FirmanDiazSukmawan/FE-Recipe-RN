@@ -36,7 +36,7 @@ import {
   getCommentRecipeId,
   getCommentRecipeIdSelector,
 } from '../../redux/reducer/comment/getCommentRecipeIdSlice';
-import {NativeBaseProvider, TextArea} from 'native-base';
+import {NativeBaseProvider, TextArea, useToast} from 'native-base';
 
 export default function DetailRecipe() {
   const route = useRoute();
@@ -47,12 +47,18 @@ export default function DetailRecipe() {
   console.log(comment);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  // console.log(users);
+  const toast = useToast();
 
   const handleLike = async () => {
     try {
       const users_id = await AsyncStorage.getItem('users_id');
       dispatch(createLiked({users_id, recipes_id}));
+      toast.show({
+        description: 'You like the recipe',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -62,6 +68,12 @@ export default function DetailRecipe() {
     try {
       const users_id = await AsyncStorage.getItem('users_id');
       dispatch(createSaved({users_id, recipes_id}));
+      toast.show({
+        description: 'You saved the recipe',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (err) {
       console.log(err);
     }

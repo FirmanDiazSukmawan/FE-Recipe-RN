@@ -10,6 +10,7 @@ import {
   Center,
   NativeBaseProvider,
   Button,
+  useToast,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
@@ -21,6 +22,9 @@ export default function Login() {
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const toast = useToast();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  // const [errMsg, setErrMsg] = useState([]);
 
   const login = async () => {
     try {
@@ -35,9 +39,15 @@ export default function Login() {
       await AsyncStorage.setItem('token', token);
       await AsyncStorage.setItem('users_id', users_id);
       navigation.navigate('HomePage');
+      toast.show({
+        description: 'Login Successfully',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
       console.log(res);
     } catch (err) {
-      console.log(err);
+      Alert.alert(err.response.data.message);
     }
   };
 
@@ -55,6 +65,14 @@ export default function Login() {
     };
     checkToken();
   }, [navigation]);
+
+  useEffect(() => {
+    if (email && password) {
+      setIsButtonDisabled(false);
+    } else {
+      setIsButtonDisabled(true);
+    }
+  }, [email, password]);
 
   return (
     <View style={styles.container}>
@@ -102,7 +120,10 @@ export default function Login() {
           />
         </Stack>
         <Text style={styles.fpw}>Forgot Password</Text>
-        <Button style={styles.submit} onPress={login}>
+        <Button
+          style={styles.submit}
+          onPress={login}
+          isDisabled={isButtonDisabled}>
           Submit
         </Button>
         <View style={styles.signup}>

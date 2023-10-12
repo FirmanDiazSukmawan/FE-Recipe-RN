@@ -16,7 +16,14 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Feather from 'react-native-vector-icons/Feather';
-import {Icon, Input, NativeBaseProvider, Stack, Button} from 'native-base';
+import {
+  Icon,
+  Input,
+  NativeBaseProvider,
+  Stack,
+  Button,
+  useToast,
+} from 'native-base';
 import Video from 'react-native-video';
 import {useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,8 +34,11 @@ export default function AddRecipe() {
   const isFocused = useIsFocused();
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [imageSelected, setImageSelected] = useState(false);
+  const [videoSelected, setVideoSelected] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const toast = useToast();
   const [data, setData] = useState({
     name_recipes: '',
     image: {
@@ -68,20 +78,29 @@ export default function AddRecipe() {
   const handleAddRecipe = async () => {
     try {
       const users_id = await AsyncStorage.getItem('users_id');
-      dispatch(createRecipe({users_id, data, selectedImage, selectedVideo}));
-      setLoading(true);
-      Alert.alert('create Recipe Succesfully');
-      setTimeout(() => {
-        navigation.navigate('Home');
-        setLoading(false);
-      }, 2000);
+      const response = await dispatch(
+        createRecipe({users_id, data, selectedImage, selectedVideo}),
+      );
+
+      if (createRecipe.rejected.match(response)) {
+        Alert.alert('U need Fill the field');
+      } else {
+        setLoading(true);
+        toast.show({
+          description: 'Create Recipe Successfully',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+
+        setTimeout(() => {
+          navigation.navigate('Home');
+          setLoading(false);
+        }, 2000);
+      }
     } catch (err) {
       console.log(err);
     }
-  };
-
-  const back = () => {
-    navigation.navigate('Profile');
   };
 
   const options = {
@@ -99,12 +118,23 @@ export default function AddRecipe() {
       if (!result.didCancel) {
         const uri = result.assets[0];
         setSelectedImage(uri);
+        setImageSelected(true);
         console.log('Gambar dari kamera:', uri);
       } else {
-        console.log('menolak open kamera');
+        toast.show({
+          description: 'menolak open kamera',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
       }
     } catch (error) {
-      console.error('Error saat membuka kamera:', error);
+      toast.show({
+        description: 'Error saat membuka kamera',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -175,10 +205,16 @@ export default function AddRecipe() {
       if (!result.didCancel) {
         const uri = result.assets[0];
         setSelectedImage(uri);
-        console.log('Image dari galeri:', uri);
+        setImageSelected(true);
+        // console.log('Image dari galeri:', uri);
       }
     } catch (error) {
-      console.error('Error saat membuka galeri:', error);
+      toast.show({
+        description: 'Error saat membuka galeri',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -196,12 +232,23 @@ export default function AddRecipe() {
         const uri = result.assets[0];
         console.log(uri);
         setSelectedVideo(uri);
+        setVideoSelected(true);
         console.log('Video dari kamera:', uri);
       } else {
-        console.log('user menolak open kamera');
+        toast.show({
+          description: 'Menolak open kamera',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
       }
     } catch (error) {
-      console.error('Error saat membuka kamera:', error);
+      toast.show({
+        description: 'Error saat membuka kamera',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -211,10 +258,16 @@ export default function AddRecipe() {
       if (!result.didCancel) {
         const uri = result.assets[0];
         setSelectedVideo(uri);
+        setVideoSelected(true);
         console.log('Video dari galeri:', uri);
       }
     } catch (error) {
-      console.error('Error saat membuka galeri:', error);
+      toast.show({
+        description: 'Error membuka galeri',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
   // console.log(data);
@@ -268,6 +321,7 @@ export default function AddRecipe() {
             height: 150,
             borderWidth: 1,
             borderColor: 'brown',
+            // objectFit: 'fill',
           }}
           resizeMode="stretch"
         />
@@ -340,8 +394,9 @@ export default function AddRecipe() {
                 borderColor: 'brown',
               }}
               controls={true}
-              resizeMode="strech"
+              resizeMode="stretch"
               autoPlay={false}
+              paused={true}
             />
             <View style={{flexDirection: 'row', marginVertical: 10}}>
               <TouchableOpacity
@@ -354,7 +409,16 @@ export default function AddRecipe() {
               </TouchableOpacity>
             </View>
           </View>
-          <Button style={styles.submit} onPress={handleAddRecipe}>
+          <Button
+            style={styles.submit}
+            onPress={handleAddRecipe}
+            isDisabled={
+              !name_recipes ||
+              !ingredients ||
+              !name_video ||
+              !imageSelected ||
+              !videoSelected
+            }>
             Add Recipe
           </Button>
         </NativeBaseProvider>

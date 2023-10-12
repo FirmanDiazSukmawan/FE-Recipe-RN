@@ -23,6 +23,7 @@ import {
 } from '../../redux/reducer/saved/getSavedUserIdSlice';
 import {deleteSaved} from '../../redux/reducer/saved/deleteSavedSlice';
 import {getRecipeId} from '../../redux/reducer/recipe/getRecipeIdSlice';
+import {useToast} from 'native-base';
 
 export default function SavedRecipe() {
   const navigation = useNavigation();
@@ -30,23 +31,26 @@ export default function SavedRecipe() {
   const {users_id} = route.params;
   const dispatch = useDispatch();
   const saved = useSelector(getSavedUserIdSelector);
-  const saved_id = saved?.data?.[0]?.saved_id;
   const loading = useSelector(loadingsavedUsersIdSelector);
   const [refresh, setRefresh] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     dispatch(getSavedUserId(users_id));
     setRefresh(false);
   }, [dispatch, users_id]);
 
-  const handleDelete = () => {
+  const handleDelete = saved_id => {
     try {
       dispatch(deleteSaved(saved_id));
-      Alert.alert('deleted successfully');
+      toast.show({
+        description: 'you unsaved that recipe',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
       onRefresh();
-    } catch {
-      Alert.alert('failed');
-    }
+    } catch {}
   };
 
   const detailRecipe = recipes_id => {
@@ -100,7 +104,9 @@ export default function SavedRecipe() {
                   <Text style={styles.text3}>{item.created_at}</Text>
                 </View>
                 <View style={{textAlign: 'right'}}>
-                  <TouchableOpacity style={styles.icon2} onPress={handleDelete}>
+                  <TouchableOpacity
+                    style={styles.icon2}
+                    onPress={() => handleDelete(item.saved_id)}>
                     <Ionicons
                       style={{fontSize: 24, color: '#E9E9E8'}}
                       name="bookmark-outline"
@@ -141,7 +147,7 @@ const styles = StyleSheet.create({
   },
   section: {
     width: '100%',
-    height: '100%',
+    height: '95%',
     paddingTop: 20,
   },
   gambar2: {

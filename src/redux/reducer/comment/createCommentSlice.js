@@ -3,20 +3,21 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {API_RECIPE} from '@env';
 import axios from 'axios';
 
+import {Alert} from 'react-native';
+
 export const createComment = createAsyncThunk(
   'comment/createComment',
   async ({commen, users_id, recipes_id}) => {
-    console.log(commen, users_id, recipes_id);
     try {
       const response = await axios.post(`${API_RECIPE}/comment/`, {
         commen: commen,
         users_id: users_id,
         recipes_id: recipes_id,
       });
-      console.log(response);
+      // console.log(response);
       return response.data;
     } catch (err) {
-      console.log(err);
+      Alert.alert(err.response.data.message);
     }
   },
 );

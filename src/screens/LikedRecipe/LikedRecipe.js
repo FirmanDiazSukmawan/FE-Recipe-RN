@@ -22,6 +22,7 @@ import {
   loadingLikedUsersIdSelector,
 } from '../../redux/reducer/liked/getLikedUsersIdSlice';
 import {deleteLiked} from '../../redux/reducer/liked/deleteLikedSlice';
+import {useToast} from 'native-base';
 
 export default function LikedRecipe() {
   const navigation = useNavigation();
@@ -29,22 +30,27 @@ export default function LikedRecipe() {
   const {users_id} = route.params;
   const dispatch = useDispatch();
   const liked = useSelector(getLikedUsersIdSelector);
-  const liked_id = liked?.data?.[0]?.liked_id;
   const loading = useSelector(loadingLikedUsersIdSelector);
   const [refresh, setRefresh] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     dispatch(getLikedUsersId(users_id));
     setRefresh(false);
   }, [dispatch, users_id]);
 
-  const handleDelete = () => {
+  const handleDelete = liked_id => {
     try {
       dispatch(deleteLiked(liked_id));
-      Alert.alert('deleted successfully');
+      toast.show({
+        description: 'you unlike that recipe',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
       onRefresh();
     } catch {
-      Alert.alert('failed');
+      Alert.alert('error unlike recipe');
     }
   };
   const onRefresh = async () => {
@@ -98,7 +104,9 @@ export default function LikedRecipe() {
                   <Text style={styles.text3}>{item.created_at}</Text>
                 </View>
                 <View style={{textAlign: 'right'}}>
-                  <TouchableOpacity onPress={handleDelete} style={styles.icon2}>
+                  <TouchableOpacity
+                    onPress={() => handleDelete(item.liked_id)}
+                    style={styles.icon2}>
                     <AntDesign
                       style={{color: '#EFC81A', fontSize: 24}}
                       name="like2"
@@ -139,7 +147,7 @@ const styles = StyleSheet.create({
   },
   section: {
     width: '100%',
-    height: '100%',
+    height: '95%',
     paddingTop: 20,
   },
   gambar2: {

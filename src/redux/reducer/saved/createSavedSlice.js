@@ -3,6 +3,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {API_RECIPE} from '@env';
 import axios from 'axios';
 
+
 export const createSaved = createAsyncThunk(
   'saved/createSaved',
   async ({users_id, recipes_id}) => {
@@ -11,7 +12,6 @@ export const createSaved = createAsyncThunk(
         users_id: users_id,
         recipes_id: recipes_id,
       });
-      //   console.log(response.data);
       return response.data;
     } catch (err) {
       console.log(err);

@@ -22,6 +22,7 @@ import {
 import {createLiked} from '../../redux/reducer/liked/createLikedSlice';
 import {createSaved} from '../../redux/reducer/saved/createSavedSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useToast} from 'native-base';
 
 export default function DetailPopularMenu() {
   const navigation = useNavigation();
@@ -29,6 +30,7 @@ export default function DetailPopularMenu() {
   const [refresh, setRefresh] = React.useState(false);
   const recipe = useSelector(getRecipeSelector);
   const loading = useSelector(getLoadingSelector);
+  const toast = useToast();
   console.log(recipe);
 
   useEffect(() => {
@@ -52,7 +54,14 @@ export default function DetailPopularMenu() {
   const handleLike = async recipes_id => {
     try {
       const users_id = await AsyncStorage.getItem('users_id');
+
       dispatch(createLiked({users_id, recipes_id}));
+      toast.show({
+        description: 'You like the recipe',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -62,6 +71,12 @@ export default function DetailPopularMenu() {
     try {
       const users_id = await AsyncStorage.getItem('users_id');
       dispatch(createSaved({users_id, recipes_id}));
+      toast.show({
+        description: 'You saved the recipe',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (err) {
       console.log(err);
     }

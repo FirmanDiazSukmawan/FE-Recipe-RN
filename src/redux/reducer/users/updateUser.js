@@ -30,12 +30,8 @@ export const updateUsers = createAsyncThunk(
         },
       );
       // console.log(response);
-      if (!response?.data) {
-        Alert.alert('edit profile failed');
-      } else {
-        Alert.alert('Edit Profile successfully');
-        return response?.data;
-      }
+
+      return response?.data;
     } catch (error) {
       Alert.alert('Error updating Profile');
       console.log(error);

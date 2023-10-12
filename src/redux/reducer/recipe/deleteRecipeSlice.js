@@ -2,16 +2,16 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {API_RECIPE} from '@env';
 import axios from 'axios';
+import { Alert } from 'native-base';
 
 export const deleteRecipe = createAsyncThunk(
   'recipe/deleteRecipe',
   async recipes_id => {
     try {
       const response = await axios.delete(`${API_RECIPE}/recipe/${recipes_id}`);
-      // console.log(response.data);
       return response.data;
     } catch (err) {
-      console.log(err);
+      Alert.alert(err.response.data.message);
     }
   },
 );

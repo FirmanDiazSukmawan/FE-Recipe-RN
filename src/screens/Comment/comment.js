@@ -31,7 +31,7 @@ import {
   getCommentRecipeId,
   getCommentRecipeIdSelector,
 } from '../../redux/reducer/comment/getCommentRecipeIdSlice';
-import {TextArea} from 'native-base';
+import {TextArea, useToast} from 'native-base';
 import {Menu} from 'react-native-paper';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {deleteComment} from '../../redux/reducer/comment/deleteCommentSlice';
@@ -46,6 +46,7 @@ export default function Comment() {
   const [loading, setLoading] = useState(false);
   const [commen, setCommen] = useState('');
   const navigation = useNavigation();
+  const toast = useToast();
 
   console.log(commen);
   // console.log(users);
@@ -54,6 +55,12 @@ export default function Comment() {
     try {
       const users_id = await AsyncStorage.getItem('users_id');
       dispatch(createLiked({users_id, recipes_id}));
+      toast.show({
+        description: 'You like this recipe',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -63,6 +70,12 @@ export default function Comment() {
     try {
       const users_id = await AsyncStorage.getItem('users_id');
       dispatch(createSaved({users_id, recipes_id}));
+      toast.show({
+        description: 'You saved this recipe',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -72,6 +85,13 @@ export default function Comment() {
     try {
       const users_id = await AsyncStorage.getItem('users_id');
       await dispatch(createComment({commen, users_id, recipes_id}));
+
+      toast.show({
+        description: 'Comment Successfully',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
 
       dispatch(getCommentRecipeId(recipes_id));
 
@@ -102,6 +122,12 @@ export default function Comment() {
   const deleteCommen = async comment_id => {
     try {
       await dispatch(deleteComment(comment_id));
+      toast.show({
+        description: 'You deleted this comment',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
       dispatch(getCommentRecipeId(recipes_id));
     } catch (err) {
       console.log(err);
