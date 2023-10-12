@@ -78,26 +78,11 @@ export default function AddRecipe() {
   const handleAddRecipe = async () => {
     try {
       const users_id = await AsyncStorage.getItem('users_id');
-      const response = await dispatch(
+      await dispatch(
         createRecipe({users_id, data, selectedImage, selectedVideo}),
+        setLoading(true),
       );
-
-      if (createRecipe.rejected.match(response)) {
-        Alert.alert('U need Fill the field');
-      } else {
-        setLoading(true);
-        toast.show({
-          description: 'Create Recipe Successfully',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
-
-        setTimeout(() => {
-          navigation.navigate('Home');
-          setLoading(false);
-        }, 2000);
-      }
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }

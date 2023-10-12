@@ -120,7 +120,7 @@ export default function EditRecipe() {
         setLoading(false);
       }, 2000);
     } catch (err) {
-      Alert.alert(err.respone.data.message);
+      Alert.alert(err.response.data.message);
     }
   };
 

@@ -32,9 +32,10 @@ export const createRecipe = createAsyncThunk(
           },
         },
       );
+      Alert.alert(' create recipe successfully');
       return response.data;
     } catch (error) {
-      throw error;
+      return Alert.alert(error.response.data.message);
     }
   },
 );
@@ -58,7 +59,7 @@ export const createRecipeSlice = createSlice({
       })
       .addCase(createRecipe.rejected, (state, action) => {
         state.loading = false;
-        state.recipe = action?.error;
+        state.recipe = action?.error.message;
       });
   },
 });
