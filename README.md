@@ -88,27 +88,22 @@ npm i / npm install
  <tr>
     <td><img width="350px" src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/205643e7-77c1-47da-8a2d-e3d494d596c4" border="0" alt="1" /></td>
     <td> <img width="350px" src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/4c64b43e-474e-433e-b384-3562438ec164"  border="0"  alt="2" /></td>
+<td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/95278b7f-601d-44a2-80d2-623911fdfd6a" border="0" alt="3" /> </td>
   </tr>
    <tr>
     <td>Login</td>
 <td>Register</td>
-  </tr>
-  
-  <tr>
-    <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/95278b7f-601d-44a2-80d2-623911fdfd6a" border="0" alt="3" /> </td>
-     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/c6b1346d-8160-4ce8-9f7e-d7005b8f67f2"  border="0" alt="4" /></td>
-  </tr>
-   <tr>
-    <td>Landing Page</td>
-     <td>Popular Recipe</td>
+<td>Landing Page</td>
   </tr>
 
   <tr>
+<td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/c6b1346d-8160-4ce8-9f7e-d7005b8f67f2"  border="0" alt="4" /></td>
     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/e89886ab-3b40-482e-8788-08300f9290f7" border="0" alt="3" /> </td>
      <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/2ad9bc31-4483-4bb8-b040-90459eb7050c"  border="0" alt="4" /></td>
 <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/c09573ac-3e24-4a3b-b18f-cb6ade6188cd" border="0" alt="3" /> </td>
   </tr>
    <tr>
+     <td>Popular Recipe</td>
     <td>Search Recipe</td>
      <td>Detail Recipe</td>
 <td>Comment</td>
