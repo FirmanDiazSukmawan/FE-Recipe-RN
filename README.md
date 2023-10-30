@@ -96,33 +96,35 @@ npm i / npm install
 <td>Landing Page</td>
   </tr>
 
-  <tr>
+<tr>
 <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/c6b1346d-8160-4ce8-9f7e-d7005b8f67f2"  border="0" alt="4" /></td>
     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/e89886ab-3b40-482e-8788-08300f9290f7" border="0" alt="3" /> </td>
      <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/2ad9bc31-4483-4bb8-b040-90459eb7050c"  border="0" alt="4" /></td>
-<td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/c09573ac-3e24-4a3b-b18f-cb6ade6188cd" border="0" alt="3" /> </td>
   </tr>
    <tr>
      <td>Popular Recipe</td>
     <td>Search Recipe</td>
      <td>Detail Recipe</td>
-<td>Comment</td>
   </tr>
+
+
   <tr>
+<td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/c09573ac-3e24-4a3b-b18f-cb6ade6188cd" border="0" alt="3" /> </td>
     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/17675c17-abb1-4923-932c-a6e52f95e17a" border="0" alt="3" /> </td>
-     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/a901461a-7bcd-4efa-af8e-a9b263767e1d"  border="0" alt="4" /></td>
      <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/cd7bcdf7-54b6-402c-a791-158c910748df"  border="0" alt="4" /></td>
   </tr>
    <tr>
+<td>Comment</td>
      <td>Add Recipe</td>
-      <td>Profile</td>
       <td>Detail Video</td>
   </tr>
     <tr>
+       <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/a901461a-7bcd-4efa-af8e-a9b263767e1d"  border="0" alt="4" /></td>
     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/c1943b8f-d716-4c93-b67a-c0595361f812" border="0" alt="3" /> </td>
      <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/fd562db7-de07-457f-9498-b9b9239f7ecd"  border="0" alt="4" /></td>
   </tr>
    <tr>
+     <td>Profile</td>
      <td>Edit Profile</td>
     <td>My Recipe</td>
   </tr>
