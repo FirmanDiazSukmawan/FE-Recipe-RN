@@ -1,4 +1,4 @@
-# FE-RECIPE-Redux-mix-react
+# FE-RECIPE-Mobile
 
 <br />
 <p align="center">
