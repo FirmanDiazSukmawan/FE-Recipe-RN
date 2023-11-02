@@ -28,7 +28,7 @@
 
 # About The Project
 
-"Recipe Cooking" is an application for exploring the world of recipes, as well as for searching and sharing many new recipes every day. Search by recipe name, share recipes, and help others make delicious and easy daily recipes. Give a like to the recipes you enjoy and save the ones you want to try at home, and also leave comments to provide feedback to the recipe creators. (tambah fitur kamera dan notifikasi dalam bahasa inggris)
+"Recipe Cooking" is an application that allows you to explore the world of recipes, search for, and share many new recipes every day. You can search for recipes by name, share recipes with others, and help them create delicious and easy dishes every day. You can like the recipes you enjoy and save the ones you want to try at home. Additionally, you can leave comments to provide feedback to the recipe creators. This app also offers additional features, including notifications to receive the latest recipe updates and the ability to open the camera to take pictures of your own recipes or share your cooking experiences visually.
 
 ## Built With
 
