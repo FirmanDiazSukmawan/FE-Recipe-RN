@@ -120,7 +120,7 @@ npm i / npm install
   </tr>
     <tr>
        <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/e82cf2fa-5964-4228-b77b-5ec14e77c40c"  border="0" alt="4" /></td>
-    <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/c1943b8f-d716-4c93-b67a-c0595361f812" border="0" alt="3" /> </td>
+    <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/022937ff-a1ff-4d90-9340-07cdb826c30a" border="0" alt="3" /> </td>
      <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/1609a0d1-88fd-420c-85f0-af201737f659"  border="0" alt="4" /></td>
   </tr>
    <tr>
