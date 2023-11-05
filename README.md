@@ -109,9 +109,9 @@ npm i / npm install
 
 
   <tr>
-<td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/c09573ac-3e24-4a3b-b18f-cb6ade6188cd" border="0" alt="3" /> </td>
+<td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/957c0941-5c7f-450c-bbb1-ed3231492c78" border="0" alt="3" /> </td>
     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/17675c17-abb1-4923-932c-a6e52f95e17a" border="0" alt="3" /> </td>
-     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/cd7bcdf7-54b6-402c-a791-158c910748df"  border="0" alt="4" /></td>
+     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/857a4b07-1f6d-4a6b-b823-b9e6849e9832"  border="0" alt="4" /></td>
   </tr>
    <tr>
 <td>Comment</td>
@@ -119,9 +119,9 @@ npm i / npm install
       <td>Detail Video</td>
   </tr>
     <tr>
-       <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/a901461a-7bcd-4efa-af8e-a9b263767e1d"  border="0" alt="4" /></td>
+       <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/e82cf2fa-5964-4228-b77b-5ec14e77c40c"  border="0" alt="4" /></td>
     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/c1943b8f-d716-4c93-b67a-c0595361f812" border="0" alt="3" /> </td>
-     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/fd562db7-de07-457f-9498-b9b9239f7ecd"  border="0" alt="4" /></td>
+     <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/1609a0d1-88fd-420c-85f0-af201737f659"  border="0" alt="4" /></td>
   </tr>
    <tr>
      <td>Profile</td>
@@ -129,8 +129,8 @@ npm i / npm install
     <td>My Recipe</td>
   </tr>
     <tr>
-<td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/7b59401a-7725-4d2a-82b2-b8834a099672"  border="0" alt="4" /></td>
-    <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/a6c44885-e04f-46dc-aa90-e86b5b7a2f8a" border="0" alt="3" /> </td>
+<td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/40720cba-b41a-4ec4-8e29-4c3db15c0097"  border="0" alt="4" /></td>
+    <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/3f4d0068-386e-4796-b987-5742267a3eb1" border="0" alt="3" /> </td>
   </tr>
    <tr>
      <td>Saved Recipe</td>
