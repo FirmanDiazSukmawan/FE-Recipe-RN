@@ -97,8 +97,8 @@ npm i / npm install
   </tr>
 
 <tr>
-<td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/c6b1346d-8160-4ce8-9f7e-d7005b8f67f2"  border="0" alt="4" /></td>
-    <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/e89886ab-3b40-482e-8788-08300f9290f7" border="0" alt="3" /> </td>
+<td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/28fd4918-aa1d-439b-a718-ca022c912434"  border="0" alt="4" /></td>
+    <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/4bf97866-cf30-4afc-b0f5-fe7e13a0e567" border="0" alt="3" /> </td>
      <td><img width="350px"  src="https://github.com/xTats/FE-Recipe-RN/assets/122331956/2ad9bc31-4483-4bb8-b040-90459eb7050c"  border="0" alt="4" /></td>
   </tr>
    <tr>
