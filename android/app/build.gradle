@@ -75,9 +75,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.testmobile"
+    namespace "com.xtats.myrecipe"
     defaultConfig {
-        applicationId "com.testmobile"
+        applicationId "com.xtats.myrecipe"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
